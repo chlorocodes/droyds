@@ -6,9 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -r dist",
-    "build": "npm run compile && npm run copyFiles",
+    "build": "npm run compile",
     "compile": "tsc",
-    "copyFiles": "cp -r src/assets dist",
     "dev": "nodemon src/index.ts",
     "start": "forever start dist/index.js",
     "stop": "forever stop dist/index.js",

@@ -9,16 +9,10 @@ export const auth: RouteHandler = (req, res) => {
   )
   const redirectUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=identify`
 
-  console.log(redirectUri)
-
   return res.redirect(redirectUrl)
 }
 
 export const login: RouteHandler<LoginSchema> = async (req, res) => {
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@')
-  console.log(req.session)
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@')
-
   const { code } = req.query
   const tokenUrl = 'https://discord.com/api/oauth2/token'
   const redirectUri = process.env.DISCORD_REDIRECT_URI as string
@@ -50,5 +44,5 @@ export const login: RouteHandler<LoginSchema> = async (req, res) => {
   req.session.userId = user.id
   req.session.username = user.username
 
-  res.redirect('/account')
+  res.redirect('http://localhost:4000/account')
 }

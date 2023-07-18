@@ -1,8 +1,8 @@
 import { join } from 'node:path'
+import server from 'fastify'
 import serveStatic from '@fastify/static'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
-import server from 'fastify'
 import { authRoutes } from './routes/auth'
 import { PrismaStore } from '../prisma/store'
 
@@ -21,7 +21,6 @@ app.register(serveStatic, { root: join(__dirname, '..') })
 app.register(authRoutes, { prefix: '/api/auth' })
 
 app.get('/account', (req) => {
-  console.log(req.session.userId)
-  console.log(req.session.username)
-  return { status: 'success' }
+  const { userId, username } = req.session
+  return { status: 'success', userId, username }
 })

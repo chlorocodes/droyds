@@ -1,6 +1,8 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import { lyme } from './bot'
 import { app } from './app'
+
+dotenv.config()
 
 const isProd = process.env.NODE_ENV === 'production'
 const host = '::'

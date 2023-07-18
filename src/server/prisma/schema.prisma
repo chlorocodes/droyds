@@ -14,3 +14,24 @@ model Session {
 
   @@map("sessions")
 }
+
+model Command {
+  id           String @id @default(uuid()) @map("id")
+  name         String @unique @map("name")
+  response     String @map("response")
+  responseType String @map("response_type")
+
+  aliases Alias[]
+
+  @@map("commands")
+}
+
+model Alias {
+  id        String @id @default(uuid()) @map("id")
+  commandId String @map("command_id")
+  name      String @unique @map("name")
+
+  command Command @relation(fields: [commandId], references: [id])
+
+  @@map("aliases")
+}

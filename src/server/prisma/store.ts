@@ -13,21 +13,17 @@ export class PrismaStore implements SessionStore {
   ) {
     try {
       await db.session.upsert({
-        where: {
-          id: sessionId
-        },
-        create: {
-          id: sessionId
-        },
+        where: { id: sessionId },
+        create: { id: sessionId },
         update: {
           userId: session.userId,
           username: session.username
         }
       })
       callback(null)
-    } catch (err) {
-      console.error(err)
-      callback(err)
+    } catch (error) {
+      console.error(error)
+      callback(error)
     }
   }
 
@@ -37,15 +33,18 @@ export class PrismaStore implements SessionStore {
         where: { id: sessionId }
       })) as unknown as Session
       callback(null, session)
-    } catch (err) {
-      callback(err, null)
+    } catch (error) {
+      callback(error, null)
     }
   }
 
   async destroy(sessionId: string) {
-    console.log('destroy is running')
-    await db.session.delete({
-      where: { id: sessionId }
-    })
+    try {
+      await db.session.delete({
+        where: { id: sessionId }
+      })
+    } catch (error) {
+      console.error(error)
+    }
   }
 }

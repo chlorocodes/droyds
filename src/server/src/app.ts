@@ -13,7 +13,7 @@ export const app = server({
 app.register(fastifyCookie)
 app.register(fastifySession, {
   secret: process.env.SESSION_SECRET as string,
-  cookie: { secure: 'auto' },
+  cookie: { secure: 'auto', maxAge: 1000 * 60 * 60 * 24 * 30 },
   store: new PrismaStore()
 })
 

@@ -3,31 +3,34 @@ import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
 import type { Command } from './types/util'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 interface Settings {
-  commands: Command[]
+  assetsPath: string
+  commands?: Command[]
 }
 
 export class Lyme {
   private client: Client
   private botInfo: BotInfo
   private commands: Command[]
+  private assetsPath: string
 
-  constructor(settings?: Settings) {
+  constructor(settings: Settings) {
     this.client = new Client({ intents })
     this.botInfo = botInfo
-    this.commands = settings?.commands ?? []
+    this.assetsPath = settings.assetsPath
+    this.commands = settings.commands ?? []
   }
 
   run() {
     this.client.once('ready', this.onReady)
-
-    if (process.env.NODE_ENV === 'production') {
-      this.client.on('messageCreate', this.onMessage)
-    } else {
-      this.client.on('messageCreate', this.debug)
-    }
-
+    this.client.on('messageCreate', isProd ? this.onMessage : this.debug)
     this.client.login(process.env.DISCORD_TOKEN as string)
+  }
+
+  addCommands(commands: Command[]) {
+    this.commands.push(...commands)
   }
 
   private onReady = (c: Client<true>) => {

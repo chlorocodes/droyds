@@ -1,10 +1,12 @@
 import { join } from 'node:path'
 import server from 'fastify'
-import serveStatic from '@fastify/static'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
-import { authRoutes } from './routes/auth'
+import serveStatic from '@fastify/static'
 import { PrismaStore } from '../prisma/store'
+import { authRoutes } from './routes/auth'
+
+const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 
 export const app = server({
   logger: true
@@ -13,10 +15,9 @@ export const app = server({
 app.register(fastifyCookie)
 app.register(fastifySession, {
   secret: process.env.SESSION_SECRET as string,
-  cookie: { secure: 'auto', maxAge: 1000 * 60 * 60 * 24 * 30 },
+  cookie: { secure: 'auto', maxAge: ONE_MONTH },
   store: new PrismaStore()
 })
-
 app.register(serveStatic, { root: join(__dirname, '..') })
 app.register(authRoutes, { prefix: '/api/auth' })
 

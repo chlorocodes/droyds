@@ -1,1 +1,0 @@
-export { Lyme } from './Lyme'

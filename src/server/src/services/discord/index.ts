@@ -1,4 +1,4 @@
-import { AuthToken } from '../types/discord'
+import { AuthToken } from '../../types/discord'
 
 export class DiscordService {
   private baseUrl = 'https://discord.com/api'

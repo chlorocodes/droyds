@@ -21,6 +21,8 @@ export async function simple({
     return
   }
 
+  message.channel.sendTyping()
+
   const { response, responseType } = command
   if (responseType === 'text') {
     message.reply(response)

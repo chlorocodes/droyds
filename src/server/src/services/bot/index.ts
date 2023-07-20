@@ -1,8 +1,10 @@
+import { join } from 'node:path'
 import { Client, Message } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
 import { abuse, translate, fact, simple } from './commands'
 import type { Command, NormalizedCommands } from './types/util'
+import { chatService } from '../openai'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -46,7 +48,7 @@ export class Lyme {
     console.log(`Ready! Logged in as ${c.user.tag}`)
   }
 
-  private onMessage = (message: Message) => {
+  private onMessage = async (message: Message) => {
     if (message.author.bot) {
       return
     }
@@ -66,6 +68,10 @@ export class Lyme {
 
   private onCommand = async (message: Message) => {
     const commandName = message.content.trim().toLowerCase()
+
+    if (this.commands[commandName]) {
+      message.channel.sendTyping()
+    }
 
     switch (commandName) {
       case '!translate':
@@ -88,14 +94,31 @@ export class Lyme {
   }
 
   private async handleBotDiscussion(message: Message) {
-    if (message.channel.id !== this.botInfo.channelId) {
+    await message.channel.sendTyping()
+
+    if (
+      message.channel.id !== this.botInfo.channelId &&
+      message.channel.id !== this.botInfo.debugChannelId
+    ) {
       message.reply(
         `If you would like to talk to me, please head over to <#${this.botInfo.channelId}> and ask me anything :blush:`
       )
     }
+
+    const user = message.author.username
+    const question = message.cleanContent
+    const response = await chatService.ask({ user, question })
+
+    message.reply(response ?? 'Unabled to generate a response')
   }
 
-  private debug = async (message: Message) => {
-    console.log(message)
+  private debug = (message: Message) => {
+    if (message.channel.id === this.botInfo.debugChannelId) {
+      this.onMessage(message)
+    }
   }
 }
+
+export const lyme = new Lyme({
+  assetsPath: join(__dirname, '..', '..', 'assets')
+})

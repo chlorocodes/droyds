@@ -39,6 +39,8 @@ class ChatService {
       reply.content = reply.content.slice(25)
     } else if (reply.content?.startsWith('As an AI assistant,')) {
       reply.content = reply.content.slice(20)
+    } else if (reply.content?.startsWith('As an AI, ')) {
+      reply.content = reply.content.slice(10)
     }
 
     this.conversation.push(reply)

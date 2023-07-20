@@ -6,6 +6,7 @@ import serveStatic from '@fastify/static'
 import { PrismaStore } from '../prisma/store'
 import { authRoutes } from './routes/auth'
 import { googleRoutes } from './routes/google'
+import { openAIRoutes } from './routes/openai'
 
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 
@@ -22,3 +23,9 @@ app.register(fastifySession, {
 app.register(serveStatic, { root: join(__dirname, '..') })
 app.register(authRoutes, { prefix: '/api/auth' })
 app.register(googleRoutes, { prefix: '/api/google' })
+app.register(openAIRoutes, { prefix: '/api/openai' })
+
+app.get('/account', (req) => {
+  const { userId, username } = req.session
+  return { status: 'success', userId, username }
+})

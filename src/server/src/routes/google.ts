@@ -6,7 +6,7 @@ export async function googleRoutes(router: TypedRouter) {
   router.route({
     method: 'POST',
     url: '/translate',
-    schema: schema.googleSchema,
+    schema: schema.translateSchema,
     handler: controller.createTranslation
   })
 }

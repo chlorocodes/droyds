@@ -22,7 +22,7 @@ export class APIClient {
   }
 
   async getRandomFact() {
-    const fact = await this.get('/api-ninja/fact')
+    const fact = await this.get('/api-ninjas/fact')
     return fact
   }
 

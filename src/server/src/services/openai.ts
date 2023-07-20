@@ -14,12 +14,11 @@ class ChatService {
   }
 
   async chat({ user, question }: { user: string; question: string }) {
-    const newMessage: ChatCompletionRequestMessage = {
+    this.conversation.push({
       role: 'user',
       name: user,
       content: question
-    }
-    this.conversation.push(newMessage)
+    })
 
     if (this.conversation.length > 10) {
       this.conversation = this.conversation.slice(-10)
@@ -27,7 +26,7 @@ class ChatService {
 
     const completion = await this.api.createChatCompletion({
       model: this.model,
-      messages: [...this.conversation, newMessage]
+      messages: this.conversation
     })
 
     const reply = completion.data.choices[0].message
@@ -44,6 +43,7 @@ class ChatService {
     }
 
     this.conversation.push(reply)
+
     return reply.content
   }
 }

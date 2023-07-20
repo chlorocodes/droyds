@@ -1,7 +1,7 @@
 import { Type } from '@sinclair/typebox'
 
-export type GoogleSchema = typeof googleSchema
-export const googleSchema = {
+export type TranslateSchema = typeof translateSchema
+export const translateSchema = {
   body: Type.Object({
     text: Type.String()
   }),

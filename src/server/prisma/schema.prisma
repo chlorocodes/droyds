@@ -29,7 +29,7 @@ model Command {
 model Alias {
   id        String @id @default(uuid()) @map("id")
   commandId String @map("command_id")
-  name      String @unique @map("name")
+  alias     String @unique @map("alias")
 
   command Command @relation(fields: [commandId], references: [id])
 

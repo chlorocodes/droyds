@@ -6,7 +6,7 @@ export type Nullable<T> = T | null
 export interface Alias {
   id: string
   commandId: string
-  name: string
+  alias: string
 }
 
 export interface Command {
@@ -16,3 +16,11 @@ export interface Command {
   responseType: string
   aliases: Alias[]
 }
+
+export type NormalizedCommands = Record<
+  string,
+  {
+    response: string
+    responseType: string
+  }
+>

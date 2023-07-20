@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import { app } from './app'
 import { lyme } from './bot'
-import { db } from '../prisma/db'
 
 dotenv.config()
 
@@ -12,12 +11,7 @@ async function main() {
 
   try {
     await app.listen({ port: Number(port), host })
-    const commands = await db.command.findMany({
-      include: { aliases: true }
-    })
-    lyme.addCommands(commands)
-    lyme.run()
-    console.log(lyme)
+    await lyme.run()
   } catch (error) {
     console.error(error)
   }

@@ -21,6 +21,11 @@ export class APIClient {
     return translation
   }
 
+  async getRandomFact() {
+    const fact = await this.get('/api-ninja/fact')
+    return fact
+  }
+
   private async post(url: string, body: AnyObject) {
     const response = await this.request(url, {
       method: 'POST',
@@ -29,7 +34,7 @@ export class APIClient {
     return response
   }
 
-  private async get(url: string, paramsObj: AnyObject) {
+  private async get(url: string, paramsObj: AnyObject = {}) {
     const queryParams = new URLSearchParams(paramsObj).toString()
     const urlWithParams = `${url}?${queryParams}`
     const response = await this.request(urlWithParams)

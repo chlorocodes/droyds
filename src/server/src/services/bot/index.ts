@@ -1,12 +1,14 @@
 import { join } from 'node:path'
-import { Client, Message } from 'discord.js'
+import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
 import { abuse, translate, fact, simple } from './commands'
 import type { Command, NormalizedCommands } from './types/util'
 import { chatService } from '../openai'
+import { apiNinjasService } from '../api-ninjas'
 
 const isProd = process.env.NODE_ENV === 'production'
+const ONE_DAY = 1000 * 60 * 60 * 24
 
 interface Options {
   assetsPath: string
@@ -16,20 +18,32 @@ interface Options {
 export class Lyme {
   private client: Client
   private botInfo: BotInfo
-  private commands: NormalizedCommands
   private assetsPath: string
+  private commands: NormalizedCommands
+  private intervals: Record<string, NodeJS.Timer>
 
   constructor(settings: Options) {
     this.client = new Client({ intents })
     this.botInfo = botInfo
     this.assetsPath = settings.assetsPath
     this.commands = {}
+    this.intervals = {}
   }
 
-  run() {
-    this.client.once('ready', this.onReady)
-    this.client.on('messageCreate', isProd ? this.onMessage : this.debug)
+  start() {
+    this.client = new Client({ intents })
+    this.setupEventListeners()
+    this.setupIntervals()
     this.client.login(process.env.DISCORD_TOKEN as string)
+  }
+
+  stop() {
+    this.client.destroy()
+  }
+
+  restart() {
+    this.stop()
+    this.start()
   }
 
   registerCommands(commands: Command[]) {
@@ -42,6 +56,15 @@ export class Lyme {
       })
     })
     this.commands = normalizedCommands
+  }
+
+  private setupEventListeners() {
+    this.client.once('ready', this.onReady)
+    this.client.on('messageCreate', isProd ? this.onMessage : this.debug)
+  }
+
+  private setupIntervals() {
+    this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)
   }
 
   private onReady = (c: Client<true>) => {
@@ -67,7 +90,7 @@ export class Lyme {
   }
 
   private onCommand = async (message: Message) => {
-    const commandName = message.content.trim().toLowerCase()
+    const [commandName, ...args] = message.content.trim().split(' ')
 
     if (this.commands[commandName]) {
       message.channel.sendTyping()
@@ -75,7 +98,7 @@ export class Lyme {
 
     switch (commandName) {
       case '!translate':
-        return translate(message)
+        return translate(message, args)
 
       case '!abuse':
         return abuse(message)
@@ -112,7 +135,17 @@ export class Lyme {
     message.reply(response ?? 'Unabled to generate a response')
   }
 
+  private async factOfTheDay() {
+    const channelId = process.env.DISCORD_BOT_SALOON_CHANNEL_ID as string
+    const saloon = (await this.client.channels.cache.get(
+      channelId
+    )) as TextChannel
+    const [fact] = await apiNinjasService.getFacts(1)
+    saloon.send(`Fact of the day: ${fact}`)
+  }
+
   private debug = (message: Message) => {
+    console.log(message)
     if (message.channel.id === this.botInfo.debugChannelId) {
       this.onMessage(message)
     }

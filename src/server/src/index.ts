@@ -11,10 +11,10 @@ async function main() {
   const port = process.env.PORT ?? (isProd ? 80 : 3000)
 
   try {
-    await app.listen({ port: Number(port), host })
     const commands = await db.command.findMany({ include: { aliases: true } })
     lyme.registerCommands(commands)
-    await lyme.run()
+    await app.listen({ port: Number(port), host })
+    await lyme.start()
   } catch (error) {
     console.error(error)
   }

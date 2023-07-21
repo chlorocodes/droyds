@@ -2,7 +2,7 @@ import { join } from 'node:path'
 import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
-import { abuse, translate, fact, simple } from './commands'
+import { abuse, translate, fact, simple, help } from './commands'
 import type { Command, NormalizedCommands } from './types/util'
 import { chatService } from '../openai'
 import { apiNinjasService } from '../api-ninjas'
@@ -76,7 +76,7 @@ export class Lyme {
       return
     }
 
-    if (message.content.startsWith('!')) {
+    if (message.content.trim().startsWith('!')) {
       return this.onCommand(message)
     }
 
@@ -90,13 +90,16 @@ export class Lyme {
   }
 
   private onCommand = async (message: Message) => {
-    const [commandName, ...args] = message.content.trim().split(' ')
+    const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     if (this.commands[commandName]) {
       message.channel.sendTyping()
     }
 
     switch (commandName) {
+      case '!help':
+        return help(message)
+
       case '!translate':
         return translate(message, args)
 

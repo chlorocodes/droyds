@@ -3,7 +3,7 @@ import server from 'fastify'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
 import serveStatic from '@fastify/static'
-import { PrismaStore } from '../prisma/store'
+import { PrismaStore } from './services/database'
 import { authRoutes } from './routes/auth'
 import { botRoutes } from './routes/bot'
 

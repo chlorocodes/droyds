@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 import { app } from './app'
 import { lyme } from './services/bot'
-import { db } from '../prisma/db'
+import { db } from './services/database'
 
 dotenv.config()
 

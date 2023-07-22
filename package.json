@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "scripts": {
     "init": "./tasks/init",
+    "clean": "rm -rf dist",
     "build": "npm run build --workspaces --if-present",
     "dev": "concurrently -n server,website -c blue,green \"npm:dev:server\" \"npm:dev:website\"",
-    "dev:server": "npm run dev --workspace=./src/server",
-    "dev:website": "npm run dev --workspace=./src/website",
-    "migrate": "npm run migrate --workspace=./src/server"
+    "deploy": "./tasks/deploy",
+    "dev:server": "npm run dev --workspace=@lyme/server",
+    "dev:website": "npm run dev --workspace=@lyme/website",
+    "migrate:dev": "npm run migrate:dev  --workspace=@lyme/server",
+    "migrate:deploy": "npm run migrate:deploy --workspace=@lyme/server"
   },
   "workspaces": [
-    "src/*"
+    "./server",
+    "./website"
   ],
   "devDependencies": {
     "concurrently": "^8.2.0"

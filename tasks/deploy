@@ -1,13 +1,37 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 set -x
 
+nvmScript="~/.nvm/nvm.sh"
+serverRoot="~/lyme"
+user=$LYME_USER
+host=lyme
+
+# Build server/website
 npm run clean
 npm run build
 
-ssh -t pi << EOF
-  cd ~/Code/lyme
-  node --version
-  npm --version
+# Send generated server/website code + configs to remote server
+scp -r dist server/package.json $user@$host:$serverRoot
+
+# Install latest dependencies, run the latest db migrations, and restart the remote server
+ssh -t $user@$host << EOF
+  source $nvmScript
+  cd $serverRoot
+
+  echo -e "\n\n======================================================="
+  echo "Installing latest dependencies..."
+  echo "======================================================="
+  npm install
+
+  echo -e "\n\n======================================================="
+  echo "Running latest database migrations..."
+  echo "======================================================="
+  npm run migrate:deploy
+
+  echo -e "\n\n======================================================="
+  echo "Restarting server..."
+  echo "======================================================="
+  npm run restart
 EOF

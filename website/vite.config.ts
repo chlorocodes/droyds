@@ -14,6 +14,9 @@ const serverEnv = dotenv.parse(serverEnvFile)
 const serverPort = serverEnv.port ?? 3000
 
 export default defineConfig({
+  build: {
+    outDir: '../dist'
+  },
   plugins: [react()],
   server: {
     port: Number(process.env.PORT ?? 4000),

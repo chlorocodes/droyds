@@ -2,7 +2,7 @@ import { join } from 'node:path'
 import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
-import { abuse, translate, fact, simple, help } from './commands'
+import { abuse, translate, fact, simple, help, archive } from './commands'
 import type { Command, NormalizedCommands } from './types/util'
 import { chatService } from '../openai'
 import { apiNinjasService } from '../api-ninjas'
@@ -92,7 +92,16 @@ export class Lyme {
   private onCommand = async (message: Message) => {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
-    if (this.commands[commandName]) {
+    const validCommands = new Set([
+      ...Object.keys(this.commands),
+      '!help',
+      '!translate',
+      '!abuse',
+      '!fact',
+      '!archive'
+    ])
+
+    if (validCommands.has(commandName)) {
       message.channel.sendTyping()
     }
 
@@ -108,6 +117,9 @@ export class Lyme {
 
       case '!fact':
         return fact(message)
+
+      case '!archive':
+        return archive(message)
 
       default:
         return simple({
@@ -148,7 +160,6 @@ export class Lyme {
   }
 
   private debug = (message: Message) => {
-    console.log(message)
     if (message.channel.id === this.botInfo.debugChannelId) {
       this.onMessage(message)
     }

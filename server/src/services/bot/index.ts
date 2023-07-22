@@ -126,7 +126,7 @@ export class Lyme {
       message.channel.id !== this.botInfo.channelId &&
       message.channel.id !== this.botInfo.debugChannelId
     ) {
-      message.reply(
+      return message.reply(
         `If you would like to talk to me, please head over to <#${this.botInfo.channelId}> and ask me anything :blush:`
       )
     }

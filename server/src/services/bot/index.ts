@@ -105,30 +105,32 @@ export class Lyme {
       message.channel.sendTyping()
     }
 
-    switch (commandName) {
-      case '!help':
-        return help(message)
-
-      case '!translate':
-        return translate(message, args)
-
-      case '!abuse':
-        return abuse(message)
-
-      case '!fact':
-        return fact(message)
-
-      case '!archive':
-        return archive(message)
-
-      default:
-        return simple({
-          message,
-          registeredCommands: this.commands,
-          commandName,
-          assetsPath: this.assetsPath
-        })
+    if (commandName === '!help') {
+      return help(message)
     }
+
+    if (commandName.startsWith('!translate')) {
+      return translate(message, args)
+    }
+
+    if (commandName === '!abuse') {
+      return abuse(message)
+    }
+
+    if (commandName === '!fact') {
+      return fact(message)
+    }
+
+    if (commandName === '!archive') {
+      return archive(message)
+    }
+
+    return simple({
+      message,
+      registeredCommands: this.commands,
+      commandName,
+      assetsPath: this.assetsPath
+    })
   }
 
   private async handleBotDiscussion(message: Message) {

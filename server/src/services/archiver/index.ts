@@ -16,9 +16,8 @@ class ArchiverService {
     await page.getByLabel('Email or Phone Number').fill(this.discordUser)
     await page.getByLabel('Password').fill(this.discordPass)
     await page.locator('button[type="submit"]').click()
-    await page.waitForURL(this.getRedirectUrl(guildId, channelId).fullUrl)
-    await this.sleep()
-    await page.screenshot({ path: join(this.screenshotPath) })
+    await this.sleep(10000)
+    await page.screenshot({ path: this.screenshotPath })
     await page.close()
     await browser.close()
   }
@@ -35,6 +34,7 @@ class ArchiverService {
       this.getRedirectUrl(guildId, channelId).paths
     )
     const url = `https://discord.com/login?redirect_to=${redirectUri}`
+    console.log({ loginUrl: url })
     return url
   }
 
@@ -42,6 +42,7 @@ class ArchiverService {
     const baseUrl = 'https://discord.com'
     const paths = `/channels/${guildId}/${channelId}`
     const fullUrl = baseUrl + paths
+    console.log({ redirectUrl: fullUrl })
     return { baseUrl, paths, fullUrl }
   }
 

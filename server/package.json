@@ -4,7 +4,7 @@
   "scripts": {
     "build": "npm run build:js && npm run build:db && npm run build:assets",
     "build:js": "tsc",
-    "build:db": "mkdir -p ../dist/prisma && cp -r prisma/migrations prisma/schema.prisma prisma/lyme.db ../dist/prisma",
+    "build:db": "mkdir -p ../dist/prisma && cp -r prisma/migrations prisma/schema.prisma ../dist/prisma",
     "build:assets": "cp -r src/assets ../dist/assets",
     "dev": "nodemon --files src/index.ts",
     "start": "forever start dist/index.js",

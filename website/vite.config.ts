@@ -15,7 +15,8 @@ const serverPort = serverEnv.port ?? 3000
 
 export default defineConfig({
   build: {
-    outDir: '../dist'
+    outDir: '../dist',
+    emptyOutDir: false
   },
   plugins: [react()],
   server: {

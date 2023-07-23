@@ -10,8 +10,7 @@ class ArchiverService {
 
   async takeScreenshot(guildId: string, channelId: string) {
     const browser = await chromium.launch()
-    const context = await browser.newContext()
-    const page = await context.newPage()
+    const page = await browser.newPage()
     await page.goto(this.getLoginUrl(guildId, channelId))
     await page.getByLabel('Email or Phone Number').fill(this.discordUser)
     await page.getByLabel('Password').fill(this.discordPass)

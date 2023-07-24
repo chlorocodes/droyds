@@ -41,6 +41,11 @@ export async function help(message: Message) {
           'When used as a reply to a message, it will reply with a roast to the author of the parent message. If this message is used standalone, it will just post a random roast not directed at anyone.'
       },
       {
+        name: '!mock',
+        value:
+          'Reply to a message with this command and it will mock it using tHiS TYpE oF cAsInG'
+      },
+      {
         name: '!abuse [user] [new username]',
         value:
           'Abuses a user of the server by changing their username to a new name. Currently, only Chloro can use this command but this will be updated soon.'

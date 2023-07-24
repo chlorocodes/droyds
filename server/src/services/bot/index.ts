@@ -9,7 +9,8 @@ import {
   simple,
   help,
   archive,
-  roast
+  roast,
+  mock
 } from './commands'
 import type { Command, NormalizedCommands } from './types/util'
 import { chatService } from '../openai'
@@ -131,6 +132,10 @@ export class Lyme {
 
     if (commandName === '!roast') {
       return roast(message)
+    }
+
+    if (commandName === '!mock') {
+      return mock(message)
     }
 
     if (commandName === '!archive') {

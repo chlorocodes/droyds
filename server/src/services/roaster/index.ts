@@ -17,6 +17,15 @@ export class RoastService {
     const { insult }: InsultResponse = await response.json()
     return insult
   }
+
+  mock(message: string) {
+    const lowercaseMessage = message.toLowerCase()
+    const mockingcaseMessage = lowercaseMessage
+      .split('')
+      .map((letter) => (Math.random() > 0.5 ? letter.toUpperCase() : letter))
+      .join('')
+    return mockingcaseMessage
+  }
 }
 
 export const roaster = new RoastService()

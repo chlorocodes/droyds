@@ -114,7 +114,7 @@ export class Lyme {
       message.channel.sendTyping()
     }
 
-    if (commandName === '!help') {
+    if (commandName === '!help' || commandName === '!commands') {
       return help(message)
     }
 

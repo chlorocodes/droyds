@@ -19,13 +19,26 @@ export async function help(message: Message) {
         value: ''
       },
       {
-        name: '!translate [text]',
+        name: '!translate',
         value:
-          'Translates some given text or it just translates the parent message when this command is used as a reply.'
+          'When this is used as a reply to any message, it will reply with a translation of the parent message'
+      },
+      {
+        name: '!translate [text]',
+        value: 'Translates the provided [text]'
+      },
+      {
+        name: '!translate~[number]',
+        value: 'Performs a multitranslation of the last [number] messages'
       },
       {
         name: '!fact',
         value: 'Replies with a random fact'
+      },
+      {
+        name: '!roast',
+        value:
+          'When used as a reply to a message, it will reply with a roast to the author of the parent message. If this message is used standalone, it will just post a random roast not directed at anyone.'
       },
       {
         name: '!abuse [user] [new username]',

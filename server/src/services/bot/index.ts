@@ -2,7 +2,15 @@ import { join } from 'node:path'
 import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
-import { abuse, translate, fact, simple, help, archive } from './commands'
+import {
+  abuse,
+  translate,
+  fact,
+  simple,
+  help,
+  archive,
+  roast
+} from './commands'
 import type { Command, NormalizedCommands } from './types/util'
 import { chatService } from '../openai'
 import { apiNinjasService } from '../api-ninjas'
@@ -119,6 +127,10 @@ export class Lyme {
 
     if (commandName === '!fact') {
       return fact(message)
+    }
+
+    if (commandName === '!roast') {
+      return roast(message)
     }
 
     if (commandName === '!archive') {

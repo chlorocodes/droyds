@@ -1,6 +1,7 @@
 export { translate } from './translate'
 export { abuse } from './abuse'
 export { fact } from './fact'
+export { roast } from './roast'
 export { simple } from './simple'
 export { help } from './help'
 export { archive } from './archive'

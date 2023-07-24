@@ -35,9 +35,10 @@ async function multiTranslate(message: Message) {
   if (!count || Number.isNaN(count)) {
     return message.reply('Invalid usage')
   }
-  if (count > 10) {
+  const translationLimit = 15
+  if (count > translationLimit) {
     return message.reply(
-      'You can only translate a maximum of 10 messages at a time'
+      `You can only translate a maximum of ${translationLimit} messages at a time`
     )
   }
   const channel = message.channel
@@ -65,7 +66,10 @@ async function getMessages(
   })
   const messages = [...collection.values()].reverse()
   const untranslatedMessages = messages.filter(
-    (message) => message.content.trim() !== ''
+    (message) =>
+      !message.author.bot &&
+      message.content.trim() !== '' &&
+      message.content.startsWith('!translate')
   )
   return untranslatedMessages
 }

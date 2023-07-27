@@ -2,6 +2,9 @@ import { join } from 'node:path'
 import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
+import type { Command, NormalizedCommands } from './types/util'
+import { chatService } from '../openai'
+import { apiNinjasService } from '../api-ninjas'
 import {
   abuse,
   translate,
@@ -10,11 +13,11 @@ import {
   help,
   archive,
   roast,
-  mock
+  mock,
+  restrict,
+  free
 } from './commands'
-import type { Command, NormalizedCommands } from './types/util'
-import { chatService } from '../openai'
-import { apiNinjasService } from '../api-ninjas'
+import { snitch } from './commands/snitch'
 
 const isProd = process.env.NODE_ENV === 'production'
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -29,6 +32,7 @@ export class Lyme {
   private botInfo: BotInfo
   private assetsPath: string
   private commands: NormalizedCommands
+  private restrictedUsers: string[]
   private intervals: Record<string, NodeJS.Timer>
 
   constructor(settings: Options) {
@@ -36,6 +40,7 @@ export class Lyme {
     this.botInfo = botInfo
     this.assetsPath = settings.assetsPath
     this.commands = {}
+    this.restrictedUsers = []
     this.intervals = {}
   }
 
@@ -81,6 +86,8 @@ export class Lyme {
   }
 
   private onMessage = async (message: Message) => {
+    console.log(message)
+
     if (message.author.bot) {
       return
     }
@@ -104,9 +111,16 @@ export class Lyme {
     const validCommands = new Set([
       ...Object.keys(this.commands),
       '!help',
+      '!commands',
       '!translate',
       '!abuse',
       '!fact',
+      '!roast',
+      '!mock',
+      '!snitch',
+      '!restrict',
+      '!free',
+      '!unrestrict',
       '!archive'
     ])
 
@@ -136,6 +150,18 @@ export class Lyme {
 
     if (commandName === '!mock') {
       return mock(message)
+    }
+
+    if (commandName === '!snitch') {
+      return snitch(message)
+    }
+
+    if (commandName === '!restrict') {
+      return restrict(message, this.restrictedUsers)
+    }
+
+    if (commandName === '!free' || commandName === '!unrestrict') {
+      return free(message, this.restrictedUsers)
     }
 
     if (commandName === '!archive') {

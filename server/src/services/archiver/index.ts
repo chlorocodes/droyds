@@ -1,6 +1,8 @@
 import { join } from 'node:path'
 import { rm } from 'node:fs/promises'
-import { chromium } from 'playwright'
+import { chromium } from 'playwright-extra'
+import stealth from 'puppeteer-extra-plugin-stealth'
+import recaptcha from 'puppeteer-extra-plugin-recaptcha'
 
 class ArchiverService {
   private discordUser = process.env.DISCORD_ADMIN_USERNAME as string
@@ -8,15 +10,35 @@ class ArchiverService {
   private screenshotsFolder = join(__dirname, 'screenshots')
   screenshotPath = join(this.screenshotsFolder, 'screenshot.png')
 
-  async takeScreenshot(guildId: string, channelId: string) {
-    const browser = await chromium.launch()
-    const page = await browser.newPage()
-    await page.goto(this.getLoginUrl(guildId, channelId))
-    await page.getByLabel('Email or Phone Number').fill(this.discordUser)
-    await page.getByLabel('Password').fill(this.discordPass)
-    await page.locator('button[type="submit"]').click()
-    await this.sleep(10000)
+  constructor() {
+    chromium.use(stealth())
+    chromium.use(
+      recaptcha({
+        provider: {
+          id: '2captcha',
+          token: process.env.CAPTCHA_API_KEY as string
+        },
+        visualFeedback: true
+      })
+    )
+  }
+
+  async takePageScreenshot(guildId: string, channelId: string) {
+    const { page, browser } = await this.login(guildId, channelId)
     await page.screenshot({ path: this.screenshotPath })
+    await page.close()
+    await browser.close()
+  }
+
+  async takeMessageScreenshot(
+    message: string,
+    guildId: string,
+    channelId: string
+  ) {
+    const { page, browser } = await this.login(guildId, channelId)
+    console.log(await page.content())
+    const element = await page.getByText(message).last()
+    await element.screenshot({ path: this.screenshotPath })
     await page.close()
     await browser.close()
   }
@@ -28,12 +50,23 @@ class ArchiverService {
     })
   }
 
+  private async login(guildId: string, channelId: string) {
+    const browser = await chromium.launch({ headless: true })
+    const page = await browser.newPage()
+    await page.goto(this.getLoginUrl(guildId, channelId))
+    await page.getByLabel('Email or Phone Number').fill(this.discordUser)
+    await page.getByLabel('Password').fill(this.discordPass)
+    await page.locator('button[type="submit"]').click()
+    await page.solveRecaptchas()
+    await this.sleep(5000)
+    return { page, browser }
+  }
+
   private getLoginUrl(guildId: string, channelId: string) {
     const redirectUri = encodeURIComponent(
       this.getRedirectUrl(guildId, channelId).paths
     )
     const url = `https://discord.com/login?redirect_to=${redirectUri}`
-    console.log({ loginUrl: url })
     return url
   }
 
@@ -41,7 +74,6 @@ class ArchiverService {
     const baseUrl = 'https://discord.com'
     const paths = `/channels/${guildId}/${channelId}`
     const fullUrl = baseUrl + paths
-    console.log({ redirectUrl: fullUrl })
     return { baseUrl, paths, fullUrl }
   }
 

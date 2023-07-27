@@ -58,7 +58,7 @@ class ArchiverService {
     await page.getByLabel('Password').fill(this.discordPass)
     await page.locator('button[type="submit"]').click()
     await page.solveRecaptchas()
-    await this.sleep(7500)
+    await this.sleep(8500)
     return { page, browser }
   }
 

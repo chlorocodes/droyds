@@ -167,7 +167,7 @@ export class Lyme {
     }
 
     if (commandName === '!archive') {
-      return archive(message)
+      return archive(message, this.client.channels)
     }
 
     return simple({

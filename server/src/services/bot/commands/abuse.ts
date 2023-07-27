@@ -9,7 +9,8 @@ export async function abuse(message: Message) {
   try {
     const victim = message.mentions.members?.at(0) as GuildMember
     const oldNickname = victim.nickname ?? victim.user.username
-    const [, , newNickname] = message.content.split(' ')
+    const [, , ...words] = message.content.split(' ')
+    const newNickname = words.join(' ')
     await victim?.setNickname(newNickname)
     message.reply(`I have renamed ${oldNickname} to ${newNickname}`)
   } catch (error) {

@@ -2,10 +2,6 @@ import { Message } from 'discord.js'
 import { archiver } from '../../archiver'
 
 export async function archive(message: Message) {
-  if (message.channel.id !== process.env.DISCORD_BOT_DEBUG_CHANNEL_ID) {
-    return message.reply('Coming soon')
-  }
-
   if (!message.guild?.id) {
     return message.reply('Cannot archive outside of a Discord server')
   }

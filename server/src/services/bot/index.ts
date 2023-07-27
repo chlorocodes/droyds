@@ -106,6 +106,8 @@ export class Lyme {
   }
 
   private onCommand = async (message: Message) => {
+    console.log(message)
+
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([

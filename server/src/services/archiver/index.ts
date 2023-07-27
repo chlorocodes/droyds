@@ -5,19 +5,19 @@ import stealth from 'puppeteer-extra-plugin-stealth'
 import recaptcha from 'puppeteer-extra-plugin-recaptcha'
 
 class ArchiverService {
+  private chromium: typeof chromium
   private discordUser = process.env.DISCORD_ADMIN_USERNAME as string
   private discordPass = process.env.DISCORD_ADMIN_PASSWORD as string
+  private captchaApiKey = process.env.CAPTCHA_API_KEY as string
   private screenshotsFolder = join(__dirname, 'screenshots')
   screenshotPath = join(this.screenshotsFolder, 'screenshot.png')
 
   constructor() {
-    chromium.use(stealth())
-    chromium.use(
+    this.chromium = chromium
+    this.chromium.use(stealth())
+    this.chromium.use(
       recaptcha({
-        provider: {
-          id: '2captcha',
-          token: process.env.CAPTCHA_API_KEY as string
-        },
+        provider: { id: '2captcha', token: this.captchaApiKey },
         visualFeedback: true
       })
     )
@@ -51,7 +51,7 @@ class ArchiverService {
   }
 
   private async login(guildId: string, channelId: string) {
-    const browser = await chromium.launch({ headless: true })
+    const browser = await this.chromium.launch({ headless: true })
     const page = await browser.newPage()
     await page.goto(this.getLoginUrl(guildId, channelId))
     await page.getByLabel('Email or Phone Number').fill(this.discordUser)

@@ -106,8 +106,6 @@ export class Lyme {
   }
 
   private onCommand = async (message: Message) => {
-    console.log(message)
-
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
@@ -198,10 +196,11 @@ export class Lyme {
   }
 
   private async factOfTheDay() {
-    const channelId = process.env.DISCORD_BOT_SALOON_CHANNEL_ID as string
+    const channelId = this.botInfo.saloonChannelId
     const saloon = (await this.client.channels.cache.get(
       channelId
     )) as TextChannel
+
     const [fact] = await apiNinjasService.getFacts(1)
     saloon.send(`Fact of the day: ${fact}`)
   }

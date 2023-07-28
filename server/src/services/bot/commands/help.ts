@@ -19,6 +19,11 @@ export async function help(message: Message) {
         value: ''
       },
       {
+        name: '!archive',
+        value:
+          'Generates a screenshot of the last few messages in the current channel, and then posts it in the #archive channel.'
+      },
+      {
         name: '!translate',
         value:
           'When this is used as a reply to any message, it will reply with a translation of the parent message. When its used as a standalone message, it will just translate the previous message.'
@@ -30,7 +35,7 @@ export async function help(message: Message) {
       {
         name: '!translate~[number]',
         value:
-          'Performs a multitranslation of the last [number] messages. Ex: !translate~5'
+          'Performs a multitranslation of the last [number] messages. This can also be used as a reply to a specific message to set the starting point. Ex: !translate~5'
       },
       {
         name: '!fact',

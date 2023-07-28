@@ -53,12 +53,14 @@ class ArchiverService {
   private async login(guildId: string, channelId: string) {
     const browser = await this.chromium.launch({ headless: true })
     const page = await browser.newPage()
+
     await page.goto(this.getLoginUrl(guildId, channelId))
     await page.getByLabel('Email or Phone Number').fill(this.discordUser)
     await page.getByLabel('Password').fill(this.discordPass)
     await page.locator('button[type="submit"]').click()
     await page.solveRecaptchas()
     await this.sleep(8500)
+
     return { page, browser }
   }
 

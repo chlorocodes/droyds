@@ -1,7 +1,8 @@
 import { GuildMember, Message } from 'discord.js'
+import { botInfo } from '../config/bot-info'
 
 export async function abuse(message: Message) {
-  if (message.author.id !== process.env.DISCORD_BOT_ADMIN_ID) {
+  if (message.author.id !== botInfo.adminId) {
     message.reply('Only chloro is allowed to abuse people :laughing:')
     return
   }

@@ -12,20 +12,19 @@ export async function translate(message: Message, args: string[] = []) {
   if (message.content.startsWith('!translate~')) {
     return multiTranslate(message)
   }
+
   let untranslatedText = args.join(' ').trim()
   if (!untranslatedText) {
     if (message.reference) {
       const reference = await message.fetchReference()
       untranslatedText = reference.content
     } else {
-      const [previousMessage] = await getMessages(
-        message.channel,
-        1,
-        message.id
-      )
+      const { id, channel } = message
+      const [previousMessage] = await getMessages(channel, 1, id)
       untranslatedText = previousMessage.content
     }
   }
+
   const translation = await googleService.translate(untranslatedText)
   message.reply(`Translation: ${translation}`)
 }
@@ -35,20 +34,30 @@ async function multiTranslate(message: Message) {
   if (!count || Number.isNaN(count)) {
     return message.reply('Invalid usage')
   }
+
   const translationLimit = 15
   if (count > translationLimit) {
     return message.reply(
       `You can only translate a maximum of ${translationLimit} messages at a time`
     )
   }
+
+  let initialMessage = message.id
+  if (message.reference) {
+    const reference = await message.fetchReference()
+    initialMessage = reference.id
+  }
+
   const channel = message.channel
-  const untranslatedMessages = await getMessages(channel, count, message.id)
+  const untranslatedMessages = await getMessages(channel, count, initialMessage)
+
   const translatedMessages: TranslatedMessage[] = await Promise.all(
     untranslatedMessages.map(async (message) => ({
       author: message.author,
       content: await googleService.translate(message.content)
     }))
   )
+
   const messageEmbed = createEmbed(translatedMessages)
   message.channel.send({ embeds: [messageEmbed] })
 }
@@ -56,21 +65,23 @@ async function multiTranslate(message: Message) {
 async function getMessages(
   channel: GuildTextBasedChannel | TextBasedChannel,
   count: number,
-  originalMessageId: string
+  initialMessageId: string
 ) {
   const collection = await channel.messages.fetch({
     limit: count,
-    ...(originalMessageId && {
-      before: originalMessageId
+    ...(initialMessageId && {
+      before: initialMessageId
     })
   })
+
   const messages = [...collection.values()].reverse()
   const untranslatedMessages = messages.filter(
     (message) =>
       !message.author.bot &&
       message.content.trim() !== '' &&
-      message.content.startsWith('!translate')
+      !message.content.startsWith('!translate')
   )
+
   return untranslatedMessages
 }
 

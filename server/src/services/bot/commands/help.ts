@@ -19,6 +19,14 @@ export async function help(message: Message) {
         value: ''
       },
       {
+        name: '!avatar, !av',
+        value: 'Replies with an image of your avatar'
+      },
+      {
+        name: '!avatar @user',
+        value: "Replies with an image of the @user's avatar"
+      },
+      {
         name: '!archive',
         value:
           'Generates a screenshot of the last few messages in the current channel, and then posts it in the #archive channel.'

@@ -15,12 +15,13 @@ import {
   roast,
   mock,
   restrict,
-  free
+  free,
+  avatar
 } from './commands'
 import { snitch } from './commands/snitch'
 
 const isProd = process.env.NODE_ENV === 'production'
-const ONE_DAY = 1000 * 60 * 60 * 24
+// const ONE_DAY = 1000 * 60 * 60 * 24
 
 interface Options {
   assetsPath: string
@@ -121,7 +122,9 @@ export class Lyme {
       '!restrict',
       '!free',
       '!unrestrict',
-      '!archive'
+      '!archive',
+      '!avatar',
+      '!av'
     ])
 
     if (validCommands.has(commandName)) {
@@ -166,6 +169,10 @@ export class Lyme {
 
     if (commandName === '!archive') {
       return archive(message, this.client.channels)
+    }
+
+    if (commandName === '!av' || commandName === '!avatar') {
+      return avatar(message)
     }
 
     return simple({

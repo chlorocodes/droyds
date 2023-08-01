@@ -1,4 +1,5 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
+import { botInfo } from '../bot/config/bot-info'
 
 class ChatService {
   private model: string
@@ -44,21 +45,35 @@ class ChatService {
     }
 
     try {
+      const suicideCheck = await this.api.createChatCompletion({
+        model: this.model,
+        messages: [
+          {
+            role: 'user',
+            name: normalizedUsername,
+            content: `Say Yes or No – Is this statement suicidal? "${question}". Give a one word answer`
+          }
+        ]
+      })
+
+      const suicideCheckResponse = suicideCheck.data.choices[0].message
+      if (suicideCheckResponse?.content?.toLowerCase().startsWith('yes')) {
+        const reply: ChatCompletionRequestMessage = {
+          role: 'assistant',
+          content: `I cannot help with this request, but please feel free to reach out to <@${botInfo.adminId}> if you are feeling down, he is always happy to listen :hugging:.`
+        }
+        this.conversation.push(reply)
+        return reply.content
+      }
+
       const completion = await this.api.createChatCompletion({
         model: this.model,
         messages: this.conversation
       })
+
       const reply = completion.data.choices[0].message
       if (!reply || !reply.content) {
         return 'Unable to generate a response'
-      }
-
-      if (reply.content?.startsWith('As an AI language model,')) {
-        reply.content = reply.content.slice(25)
-      } else if (reply.content?.startsWith('As an AI assistant,')) {
-        reply.content = reply.content.slice(20)
-      } else if (reply.content?.startsWith('As an AI, ')) {
-        reply.content = reply.content.slice(10)
       }
 
       this.conversation.push(reply)

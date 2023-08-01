@@ -10,6 +10,7 @@ class ArchiverService {
   private discordPass = process.env.DISCORD_ADMIN_PASSWORD as string
   private captchaApiKey = process.env.CAPTCHA_API_KEY as string
   private screenshotsFolder = join(__dirname, 'screenshots')
+  private isVerified = true
   screenshotPath = join(this.screenshotsFolder, 'screenshot.png')
 
   constructor() {
@@ -36,7 +37,6 @@ class ArchiverService {
     channelId: string
   ) {
     const { page, browser } = await this.login(guildId, channelId)
-    console.log(await page.content())
     const element = await page.getByText(message).last()
     await element.screenshot({ path: this.screenshotPath })
     await page.close()
@@ -58,8 +58,13 @@ class ArchiverService {
     await page.getByLabel('Email or Phone Number').fill(this.discordUser)
     await page.getByLabel('Password').fill(this.discordPass)
     await page.locator('button[type="submit"]').click()
-    await page.solveRecaptchas()
-    await this.sleep(8500)
+
+    if (!this.isVerified) {
+      await page.solveRecaptchas()
+      await this.sleep(8500)
+    } else {
+      await this.sleep(5000)
+    }
 
     return { page, browser }
   }

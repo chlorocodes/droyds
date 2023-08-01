@@ -44,20 +44,20 @@ export class Lyme {
     this.intervals = {}
   }
 
-  start() {
+  async start() {
     this.client = new Client({ intents })
     this.setupEventListeners()
     this.setupIntervals()
-    this.client.login(process.env.DISCORD_TOKEN as string)
+    await this.client.login(process.env.DISCORD_TOKEN as string)
   }
 
-  stop() {
-    this.client.destroy()
+  async stop() {
+    await this.client.destroy()
   }
 
-  restart() {
-    this.stop()
-    this.start()
+  async restart() {
+    await this.stop()
+    await this.start()
   }
 
   registerCommands(commands: Command[]) {
@@ -78,7 +78,7 @@ export class Lyme {
   }
 
   private setupIntervals() {
-    this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)
+    // this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)
   }
 
   private onReady = (c: Client<true>) => {

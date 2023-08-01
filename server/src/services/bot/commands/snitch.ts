@@ -6,7 +6,7 @@ export async function snitch(message: Message) {
     return message.reply("I don't know what you want me to snitch on")
   }
 
-  const authorityId = botInfo.adminId
+  const authorityId = botInfo.shibuyaOwnerId
   const reference = await message.fetchReference()
 
   return reference.reply(

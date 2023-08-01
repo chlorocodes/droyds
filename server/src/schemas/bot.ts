@@ -9,7 +9,8 @@ export const createCommandSchema = {
   }),
   response: {
     200: Type.Object({
-      status: Type.Literal('success')
+      status: Type.Literal('success'),
+      id: Type.String()
     })
   }
 }
@@ -32,29 +33,23 @@ export const getCommandsSchema = {
 
 export type CreateSuggestionSchema = typeof createSuggestionSchema
 export const createSuggestionSchema = {
-  body: {
-    title: Type.String(),
+  body: Type.Object({
     suggestion: Type.String()
-  },
+  }),
   response: {
     200: Type.Object({
-      status: Type.Literal('success')
+      status: Type.Literal('success'),
+      id: Type.String()
     })
   }
 }
 
-export type GetSuggestionsSchema = typeof getCommandsSchema
+export type GetSuggestionsSchema = typeof getSuggestionsSchema
 export const getSuggestionsSchema = {
   response: {
     200: Type.Object({
       status: Type.Literal('success'),
-      suggestions: Type.Array(
-        Type.Object({
-          name: Type.String(),
-          response: Type.String(),
-          responseType: Type.Enum(Type.Literal('text'), Type.Literal('image'))
-        })
-      )
+      suggestions: Type.Array(Type.String())
     })
   }
 }

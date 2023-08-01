@@ -12,7 +12,7 @@ async function main() {
 
   try {
     const commands = await db.command.findMany({ include: { aliases: true } })
-    lyme.registerCommands(commands)
+    lyme.registerSimpleCommands(commands)
     await app.listen({ port: Number(port), host })
     await lyme.start()
   } catch (error) {

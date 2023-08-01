@@ -31,7 +31,7 @@ export class Lyme {
   private client: Client
   private botInfo: BotInfo
   private assetsPath: string
-  private commands: NormalizedCommands
+  private simpleCommands: NormalizedCommands
   private restrictedUsers: string[]
   private intervals: Record<string, NodeJS.Timer>
 
@@ -39,28 +39,28 @@ export class Lyme {
     this.client = new Client({ intents })
     this.botInfo = botInfo
     this.assetsPath = settings.assetsPath
-    this.commands = {}
+    this.simpleCommands = {}
     this.restrictedUsers = []
     this.intervals = {}
   }
 
-  start() {
+  async start() {
     this.client = new Client({ intents })
     this.setupEventListeners()
     this.setupIntervals()
-    this.client.login(process.env.DISCORD_TOKEN as string)
+    await this.client.login(process.env.DISCORD_TOKEN as string)
   }
 
   stop() {
     this.client.destroy()
   }
 
-  restart() {
+  async restart() {
     this.stop()
-    this.start()
+    await this.start()
   }
 
-  registerCommands(commands: Command[]) {
+  registerSimpleCommands(commands: Command[]) {
     const normalizedCommands: NormalizedCommands = {}
     commands.forEach(({ name, response, responseType, aliases }) => {
       const commandSetting = { response, responseType }
@@ -69,7 +69,7 @@ export class Lyme {
         normalizedCommands[alias] = commandSetting
       })
     })
-    this.commands = normalizedCommands
+    this.simpleCommands = normalizedCommands
   }
 
   private setupEventListeners() {
@@ -109,7 +109,7 @@ export class Lyme {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
-      ...Object.keys(this.commands),
+      ...Object.keys(this.simpleCommands),
       '!help',
       '!commands',
       '!translate',
@@ -170,7 +170,7 @@ export class Lyme {
 
     return simple({
       message,
-      registeredCommands: this.commands,
+      registeredCommands: this.simpleCommands,
       commandName,
       assetsPath: this.assetsPath
     })
@@ -195,7 +195,7 @@ export class Lyme {
     message.reply(response ?? 'Unabled to generate a response')
   }
 
-  private async factOfTheDay() {
+  private factOfTheDay = async () => {
     const channelId = this.botInfo.saloonChannelId
     const saloon = (await this.client.channels.cache.get(
       channelId

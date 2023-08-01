@@ -9,4 +9,11 @@ export async function botRoutes(router: TypedRouter) {
     schema: schemas.createCommandSchema,
     handler: controller.createCommand
   })
+
+  router.route({
+    method: 'POST',
+    url: '/suggestions',
+    schema: schemas.createSuggestionSchema,
+    handler: controller.createSuggestion
+  })
 }

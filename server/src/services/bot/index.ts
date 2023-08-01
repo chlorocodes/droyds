@@ -195,7 +195,7 @@ export class Lyme {
     message.reply(response ?? 'Unabled to generate a response')
   }
 
-  private async factOfTheDay() {
+  private factOfTheDay = async () => {
     const channelId = this.botInfo.saloonChannelId
     const saloon = (await this.client.channels.cache.get(
       channelId

@@ -16,9 +16,9 @@ import {
   mock,
   restrict,
   free,
+  snitch,
   avatar
 } from './commands'
-import { snitch } from './commands/snitch'
 import { db } from '../database'
 
 const isProd = process.env.NODE_ENV === 'production'

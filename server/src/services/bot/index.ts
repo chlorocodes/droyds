@@ -19,9 +19,10 @@ import {
   avatar
 } from './commands'
 import { snitch } from './commands/snitch'
+import { db } from '../database'
 
 const isProd = process.env.NODE_ENV === 'production'
-// const ONE_DAY = 1000 * 60 * 60 * 24
+const ONE_DAY = 1000 * 60 * 60 * 24
 
 interface Options {
   assetsPath: string
@@ -32,7 +33,7 @@ export class Lyme {
   private client: Client
   private botInfo: BotInfo
   private assetsPath: string
-  private commands: NormalizedCommands
+  private simpleCommands: NormalizedCommands
   private restrictedUsers: string[]
   private intervals: Record<string, NodeJS.Timer>
 
@@ -40,7 +41,7 @@ export class Lyme {
     this.client = new Client({ intents })
     this.botInfo = botInfo
     this.assetsPath = settings.assetsPath
-    this.commands = {}
+    this.simpleCommands = {}
     this.restrictedUsers = []
     this.intervals = {}
   }
@@ -49,6 +50,7 @@ export class Lyme {
     this.client = new Client({ intents })
     this.setupEventListeners()
     this.setupIntervals()
+    await this.registerCommands()
     await this.client.login(process.env.DISCORD_TOKEN as string)
   }
 
@@ -61,8 +63,10 @@ export class Lyme {
     await this.start()
   }
 
-  registerCommands(commands: Command[]) {
+  async registerCommands() {
+    const commands = await db.command.findMany({ include: { aliases: true } })
     const normalizedCommands: NormalizedCommands = {}
+
     commands.forEach(({ name, response, responseType, aliases }) => {
       const commandSetting = { response, responseType }
       normalizedCommands[name] = commandSetting
@@ -70,7 +74,8 @@ export class Lyme {
         normalizedCommands[alias] = commandSetting
       })
     })
-    this.commands = normalizedCommands
+
+    this.simpleCommands = normalizedCommands
   }
 
   private setupEventListeners() {
@@ -79,7 +84,7 @@ export class Lyme {
   }
 
   private setupIntervals() {
-    // this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)
+    this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)
   }
 
   private onReady = (c: Client<true>) => {
@@ -110,7 +115,7 @@ export class Lyme {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
-      ...Object.keys(this.commands),
+      ...Object.keys(this.simpleCommands),
       '!help',
       '!commands',
       '!translate',
@@ -177,7 +182,7 @@ export class Lyme {
 
     return simple({
       message,
-      registeredCommands: this.commands,
+      registeredCommands: this.simpleCommands,
       commandName,
       assetsPath: this.assetsPath
     })

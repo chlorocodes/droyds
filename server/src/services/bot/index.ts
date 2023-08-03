@@ -17,7 +17,8 @@ import {
   restrict,
   free,
   snitch,
-  avatar
+  avatar,
+  compliment
 } from './commands'
 import { db } from '../database'
 
@@ -123,6 +124,7 @@ export class Lyme {
       '!translate',
       '!abuse',
       '!fact',
+      '!compliment',
       '!roast',
       '!mock',
       '!snitch',
@@ -152,6 +154,10 @@ export class Lyme {
 
     if (commandName === '!fact') {
       return fact(message)
+    }
+
+    if (commandName === '!compliment') {
+      return compliment(message)
     }
 
     if (commandName === '!roast') {

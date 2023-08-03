@@ -50,6 +50,11 @@ export async function help(message: Message) {
         value: 'Replies with a random fact.'
       },
       {
+        name: '!compliment',
+        value:
+          'When used as a reply to a message, it will reply with a compliment to the author of the parent message. If this message is used standalone, it will just post a random compliment not directed at anyone.'
+      },
+      {
         name: '!roast',
         value:
           'When used as a reply to a message, it will reply with a roast to the author of the parent message. If this message is used standalone, it will just post a random roast not directed at anyone.'

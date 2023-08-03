@@ -98,6 +98,8 @@ export class Lyme {
       return
     }
 
+    this.handleSpecialInteractions(message)
+
     if (message.content.trim().startsWith('!')) {
       return this.onCommand(message)
     }
@@ -205,6 +207,16 @@ export class Lyme {
     const response = await chatService.ask({ user, question })
 
     message.reply(response ?? 'Unabled to generate a response')
+  }
+
+  private async handleSpecialInteractions(message: Message) {
+    // Everyone else gets special treatment besides neko now
+    if (
+      message.author.username !== '.zselect' &&
+      message.content.toLowerCase().startsWith('good morning')
+    ) {
+      message.reply(`Good morning ${message.author.username} :blush:`)
+    }
   }
 
   private factOfTheDay = async () => {

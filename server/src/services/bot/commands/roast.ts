@@ -1,16 +1,20 @@
 import { Message } from 'discord.js'
 import { roaster } from '../../roaster'
 
+const greetings = ['Yo', 'Hey', 'Sup']
+
 export async function roast(message: Message) {
-  try {
-    const insult = await roaster.roast()
-    if (message.reference) {
-      const reference = await message.fetchReference()
-      reference.reply(insult)
-    } else {
-      message.channel.send(insult)
-    }
-  } catch (error) {
-    message.reply('There was an error when attempting to roast')
+  const victim = message.mentions?.members?.at(0) ?? message.author
+  const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+  const insult = await roaster.roast()
+
+  if (victim.id === message.author.id) {
+    return message.channel.send(insult)
   }
+
+  const formattedInsult = `${greeting} <@${victim.id}> – ${
+    insult[0].toLowerCase() + insult.slice(1)
+  }`
+
+  message.channel.send(formattedInsult)
 }

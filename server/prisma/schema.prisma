@@ -35,3 +35,11 @@ model Alias {
 
   @@map("aliases")
 }
+
+model Suggestion {
+  id         String @id @map("id")
+  userId     String @map("user_id")
+  suggestion String @map("suggestion")
+
+  @@map("suggestions")
+}

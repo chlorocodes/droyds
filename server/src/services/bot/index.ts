@@ -98,8 +98,6 @@ export class Lyme {
       return
     }
 
-    this.handleSpecialInteractions(message)
-
     if (message.content.trim().startsWith('!')) {
       return this.onCommand(message)
     }
@@ -111,6 +109,8 @@ export class Lyme {
     if (isBotMention || isRoleMention || isReplyToBot) {
       this.handleBotDiscussion(message)
     }
+
+    this.handleSpecialInteractions(message)
   }
 
   private onCommand = async (message: Message) => {
@@ -209,15 +209,7 @@ export class Lyme {
     message.reply(response ?? 'Unabled to generate a response')
   }
 
-  private async handleSpecialInteractions(message: Message) {
-    // Everyone else gets special treatment besides neko now
-    if (
-      message.author.username !== '.zselect' &&
-      message.content.toLowerCase().startsWith('good morning')
-    ) {
-      message.reply(`Good morning ${message.author.username} :blush:`)
-    }
-  }
+  private async handleSpecialInteractions(message: Message) {}
 
   private factOfTheDay = async () => {
     const channelId = this.botInfo.saloonChannelId

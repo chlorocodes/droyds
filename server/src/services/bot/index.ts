@@ -200,6 +200,7 @@ export class Lyme {
     await message.channel.sendTyping()
 
     if (
+      message.author.id !== this.botInfo.adminId &&
       message.channel.id !== this.botInfo.channelId &&
       message.channel.id !== this.botInfo.debugChannelId
     ) {

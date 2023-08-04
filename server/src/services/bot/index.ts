@@ -99,6 +99,8 @@ export class Lyme {
       return
     }
 
+    console.log({ list: this.restrictedUsers })
+
     if (message.content.trim().startsWith('!')) {
       return this.onCommand(message)
     }

@@ -2,15 +2,16 @@ import { Message } from 'discord.js'
 import { botInfo } from '../config/bot-info'
 
 export async function free(message: Message, restrictedUsers: string[]) {
-  if (!message.mentions.repliedUser) {
+  if (message.author.id !== botInfo.adminId) {
+    return message.reply('Only a bot admin can free users')
+  }
+
+  const userToFree = message.mentions?.members?.at(0)
+
+  if (!userToFree) {
     return
   }
 
-  if (message.author.id !== botInfo.adminId) {
-    return message.reply('Only a bot admin can remove restrictions')
-  }
-
-  const userToFree = message.mentions.repliedUser
   const index = restrictedUsers.indexOf(userToFree.id)
 
   if (index !== -1) {

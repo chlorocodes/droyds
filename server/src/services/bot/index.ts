@@ -216,7 +216,14 @@ export class Lyme {
     message.reply(response ?? 'Unabled to generate a response')
   }
 
-  private async handleSpecialInteractions(message: Message) {}
+  private async handleSpecialInteractions(message: Message) {
+    if (
+      message.author.username === '.zselect' &&
+      message.content.toLowerCase().startsWith('good morning')
+    ) {
+      message.reply('Good morning my main man :blush:')
+    }
+  }
 
   private factOfTheDay = async () => {
     const channelId = this.botInfo.saloonChannelId

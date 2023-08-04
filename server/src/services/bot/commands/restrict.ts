@@ -18,6 +18,6 @@ export async function restrict(message: Message, restrictedUsers: string[]) {
   restrictedUsers.push(userToRestrict.id)
 
   message.reply(
-    `${userToRestrict} has been added to the restricted list. This user will now have much more limited access to Lyme interactions until the restrictions have been lifted.`
+    `${userToRestrict} has been added to the restricted list. Right now, there are no special restrictions or auto-abuse actions in place for restricted users, but soon you will become a lot more susceptible to bot abuse in the future if you are not freed from the list by chloro :blush:`
   )
 }

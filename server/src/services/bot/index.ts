@@ -201,15 +201,13 @@ export class Lyme {
   private async handleBotDiscussion(message: Message) {
     await message.channel.sendTyping()
 
-    // if (
-    //   message.author.id !== this.botInfo.adminId &&
-    //   message.channel.id !== this.botInfo.channelId &&
-    //   message.channel.id !== this.botInfo.debugChannelId
-    // ) {
-    //   return message.reply(
-    //     `If you would like to talk to me, please head over to <#${this.botInfo.channelId}> and ask me anything :blush:`
-    //   )
-    // }
+    if (
+      message.author.id !== this.botInfo.adminId &&
+      message.channel.id !== this.botInfo.channelId &&
+      message.channel.id !== this.botInfo.debugChannelId
+    ) {
+      return
+    }
 
     const user = message.author.username
     const question = message.cleanContent

@@ -22,7 +22,13 @@ export class RoastService {
     const lowercaseMessage = message.toLowerCase()
     const mockingcaseMessage = lowercaseMessage
       .split('')
-      .map((letter) => (Math.random() > 0.5 ? letter.toUpperCase() : letter))
+      .map((letter, i) =>
+        i === 0
+          ? letter.toLowerCase()
+          : Math.random() > 0.5
+          ? letter.toUpperCase()
+          : letter
+      )
       .join('')
     return mockingcaseMessage
   }

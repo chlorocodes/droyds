@@ -1,3 +1,5 @@
+import mockingcase from '@strdr4605/mockingcase'
+
 interface InsultResponse {
   number: string
   language: string
@@ -19,18 +21,8 @@ export class RoastService {
   }
 
   mock(message: string) {
-    const lowercaseMessage = message.toLowerCase()
-    const mockingcaseMessage = lowercaseMessage
-      .split('')
-      .map((letter, i) =>
-        i === 0
-          ? letter.toLowerCase()
-          : Math.random() > 0.5
-          ? letter.toUpperCase()
-          : letter
-      )
-      .join('')
-    return mockingcaseMessage
+    const mockingcaseMessage = mockingcase(message)
+    return '!!!' + mockingcaseMessage
   }
 }
 

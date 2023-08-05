@@ -22,7 +22,7 @@ export class RoastService {
 
   mock(message: string) {
     const mockingcaseMessage = mockingcase(message)
-    return '!!!' + mockingcaseMessage
+    return mockingcaseMessage
   }
 }
 

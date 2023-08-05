@@ -1,11 +1,12 @@
 import { AuthToken } from '../../types/discord'
+import { botInfo } from '../bot/config/bot-info'
 
 export class DiscordService {
   private baseUrl = 'https://discord.com/api'
   private clientId = process.env.DISCORD_CLIENT_ID as string
   private clientSecret = process.env.DISCORD_CLIENT_SECRET as string
   private redirectUri = process.env.DISCORD_REDIRECT_URI as string
-  private scope = 'identify'
+  private scope = 'identify%20guilds%20guilds.members.read'
 
   getAuthUrl() {
     const responseType = 'code'
@@ -31,10 +32,28 @@ export class DiscordService {
     })
 
     const token: AuthToken = await response.json()
-    const userResponse = await fetch(`${this.baseUrl}/users/@me`, {
-      headers: { Authorization: `${token.token_type} ${token.access_token}` }
-    })
-    const user = await userResponse.json()
+
+    const [userResponse, memberResponse] = await Promise.all([
+      fetch(`${this.baseUrl}/users/@me`, {
+        headers: { Authorization: `${token.token_type} ${token.access_token}` }
+      }),
+      fetch(
+        `${this.baseUrl}/users/@me/guilds/${botInfo.shibuyaServerId}/member`,
+        {
+          headers: {
+            Authorization: `${token.token_type} ${token.access_token}`
+          }
+        }
+      )
+    ])
+
+    const [user, member] = await Promise.all([
+      userResponse.json(),
+      memberResponse.json()
+    ])
+
+    console.log(member)
+
     return user
   }
 }

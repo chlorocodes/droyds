@@ -224,7 +224,9 @@ export class Lyme {
       message.author.username === '.zselect' &&
       message.content.toLowerCase().startsWith('good morning')
     ) {
-      message.reply('Good morning my main man :blush:')
+      message.reply(
+        'Good morning Neko! :blush:\nEveryone, please remeber to subscribe to https://www.youtube.com/@zselect7791'
+      )
     }
   }
 

@@ -63,7 +63,7 @@ class ArchiverService {
       await page.solveRecaptchas()
       await this.sleep(10000)
     } else {
-      await this.sleep(5000)
+      await this.sleep(8500)
     }
 
     return { page, browser }

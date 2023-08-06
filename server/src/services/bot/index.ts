@@ -18,7 +18,8 @@ import {
   free,
   snitch,
   avatar,
-  compliment
+  compliment,
+  joke
 } from './commands'
 import { db } from '../database'
 
@@ -138,7 +139,9 @@ export class Lyme {
       '!unrestrict',
       '!archive',
       '!avatar',
-      '!av'
+      '!av',
+      '!joke',
+      '!jokes'
     ])
 
     if (validCommands.has(commandName)) {
@@ -191,6 +194,10 @@ export class Lyme {
 
     if (commandName === '!av' || commandName === '!avatar') {
       return avatar(message)
+    }
+
+    if (commandName === '!joke' || commandName === '!jokes') {
+      return joke(message)
     }
 
     return simple({

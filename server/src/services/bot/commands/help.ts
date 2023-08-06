@@ -65,6 +65,11 @@ export async function help(message: Message) {
           'Reply to a message with this command and it will mock it using tHiS TYpE oF cAsInG.'
       },
       {
+        name: '!joke',
+        value:
+          'Replies with a random joke. (Warning: the jokes are not vetted and may be racist/sexist)'
+      },
+      {
         name: '!snitch',
         value:
           "This command ust be used as a reply to another message, and it alerts the authorities of that message's contents"

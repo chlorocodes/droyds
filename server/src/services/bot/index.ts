@@ -49,9 +49,10 @@ export class Lyme {
 
   async start() {
     this.client = new Client({ intents })
+    await this.registerSimpleCommands()
+    await this.registerRestrictedUsers()
     this.setupEventListeners()
     this.setupIntervals()
-    await this.registerCommands()
     await this.client.login(process.env.DISCORD_TOKEN as string)
   }
 
@@ -64,7 +65,7 @@ export class Lyme {
     await this.start()
   }
 
-  async registerCommands() {
+  private async registerSimpleCommands() {
     const commands = await db.command.findMany({ include: { aliases: true } })
     const normalizedCommands: NormalizedCommands = {}
 
@@ -78,6 +79,8 @@ export class Lyme {
 
     this.simpleCommands = normalizedCommands
   }
+
+  private async registerRestrictedUsers() {}
 
   private setupEventListeners() {
     this.client.once('ready', this.onReady)
@@ -201,13 +204,13 @@ export class Lyme {
   private async handleBotDiscussion(message: Message) {
     await message.channel.sendTyping()
 
-    if (
-      message.author.id !== this.botInfo.adminId &&
-      message.channel.id !== this.botInfo.channelId &&
-      message.channel.id !== this.botInfo.debugChannelId
-    ) {
-      return
-    }
+    // if (
+    //   message.author.id !== this.botInfo.adminId &&
+    //   message.channel.id !== this.botInfo.channelId &&
+    //   message.channel.id !== this.botInfo.debugChannelId
+    // ) {
+    //   return
+    // }
 
     const user = message.author.username
     const question = message.cleanContent

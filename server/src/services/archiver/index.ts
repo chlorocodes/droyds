@@ -61,7 +61,7 @@ class ArchiverService {
 
     if (!this.isVerified) {
       await page.solveRecaptchas()
-      await this.sleep(8500)
+      await this.sleep(10000)
     } else {
       await this.sleep(5000)
     }

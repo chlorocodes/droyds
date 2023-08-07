@@ -31,7 +31,7 @@ type JokeResponse = SingleJokeResponse | MultiJokeResponse
 export class JokesService {
   async getJokes(count = 1): Promise<Joke[]> {
     const response = await fetch(
-      `https://v2.jokeapi.dev/joke/Any?type=twopart&amount=${count}`
+      `https://v2.jokeapi.dev/joke/Miscellaneous,Dark?blacklistFlags=religious,racist&type=twopart&amount=${count}`
     )
     const jokes: JokeResponse = await response.json()
     if ('amount' in jokes) {

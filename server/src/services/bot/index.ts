@@ -232,7 +232,7 @@ export class Lyme {
       message.content.toLowerCase().startsWith('good morning')
     ) {
       message.reply(
-        'Good morning Neko! :blush:\nEveryone, please remeber to subscribe to https://www.youtube.com/@zselect7791'
+        'Good morning Neko! :blush:\nEveryone, please remember to subscribe to https://www.youtube.com/@zselect7791'
       )
     }
   }

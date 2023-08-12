@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 import { app } from './app'
-import { lyme } from './services/bot'
+import { lyme } from './services/bots/lyme'
 
 dotenv.config()
 

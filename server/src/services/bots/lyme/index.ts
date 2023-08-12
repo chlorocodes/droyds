@@ -3,8 +3,8 @@ import { Client, Message, TextChannel } from 'discord.js'
 import { intents } from './config/intents'
 import { BotInfo, botInfo } from './config/bot-info'
 import type { Command, NormalizedCommands } from './types/util'
-import { chatService } from '../openai'
-import { apiNinjasService } from '../api-ninjas'
+import { chatService } from '../../openai'
+import { apiNinjasService } from '../../api-ninjas'
 import {
   abuse,
   translate,
@@ -21,14 +21,13 @@ import {
   compliment,
   joke
 } from './commands'
-import { db } from '../database'
+import { db } from '../../database'
 
 const isProd = process.env.NODE_ENV === 'production'
 const ONE_DAY = 1000 * 60 * 60 * 24
 
 interface Options {
   assetsPath: string
-  commands?: Command[]
 }
 
 export class Lyme {
@@ -68,6 +67,9 @@ export class Lyme {
 
   private async registerSimpleCommands() {
     const commands = await db.command.findMany({ include: { aliases: true } })
+
+    commands[0].aliases[0].
+    
     const normalizedCommands: NormalizedCommands = {}
 
     commands.forEach(({ name, response, responseType, aliases }) => {
@@ -83,10 +85,7 @@ export class Lyme {
 
   private async registerRestrictedUsers() {}
 
-  private setupEventListeners() {
-    this.client.once('ready', this.onReady)
-    this.client.on('messageCreate', isProd ? this.onMessage : this.debug)
-  }
+
 
   private setupIntervals() {
     this.intervals.factOfTheDay = setInterval(this.factOfTheDay, ONE_DAY)

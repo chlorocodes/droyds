@@ -1,5 +1,5 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai'
-import { botInfo } from '../bot/config/bot-info'
+import { botInfo } from '../bots/lyme/config/bot-info'
 
 class ChatService {
   private model: string

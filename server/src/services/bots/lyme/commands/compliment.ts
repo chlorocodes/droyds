@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { complimenter } from '../../complimenter'
+import { complimenter } from '../../../complimenter'
 
 const greetings = ['Yo', 'Hey', 'Sup']
 

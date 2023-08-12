@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { roaster } from '../../roaster'
+import { roaster } from '../../../roaster'
 
 export async function mock(message: Message) {
   if (!message.reference) {

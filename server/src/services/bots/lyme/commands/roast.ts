@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { roaster } from '../../roaster'
+import { roaster } from '../../../roaster'
 import { botInfo } from '../config/bot-info'
 
 const greetings = ['Yo', 'Hey', 'Sup']

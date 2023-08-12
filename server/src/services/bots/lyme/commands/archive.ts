@@ -1,5 +1,5 @@
 import { ChannelManager, GuildTextBasedChannel, Message } from 'discord.js'
-import { archiver } from '../../archiver'
+import { archiver } from '../../../archiver'
 import { botInfo } from '../config/bot-info'
 
 export async function archive(message: Message, channels: ChannelManager) {

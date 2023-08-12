@@ -4,7 +4,7 @@ import {
   GuildTextBasedChannel,
   TextBasedChannel
 } from 'discord.js'
-import { googleService } from '../../google'
+import { googleService } from '../../../google'
 
 type TranslatedMessage = Pick<Message, 'author' | 'content'>
 

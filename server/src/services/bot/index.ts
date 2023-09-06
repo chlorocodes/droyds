@@ -123,9 +123,6 @@ export class Lyme {
       '!roast',
       '!mock',
       '!snitch',
-      '!restrict',
-      '!free',
-      '!unrestrict',
       '!archive',
       '!avatar',
       '!av',
@@ -201,16 +198,9 @@ export class Lyme {
   }
 
   private async handleBotDiscussion(message: Message) {
-    console.log(this.isRestricted)
-    console.log(this.isRestricted)
-    console.log(this.isRestricted)
-
     if (this.isRestricted && message.channel.id !== this.botInfo.channelId) {
-      console.log('inside here')
       return
     }
-
-    console.log('outside here')
 
     await message.channel.sendTyping()
 

@@ -9,7 +9,6 @@ import {
   abuse,
   translate,
   fact,
-  simple,
   help,
   archive,
   roast,
@@ -21,7 +20,6 @@ import {
   compliment,
   joke
 } from './commands'
-import { db } from '../database'
 
 const isProd = process.env.NODE_ENV === 'production'
 const ONE_DAY = 1000 * 60 * 60 * 24
@@ -38,6 +36,7 @@ export class Lyme {
   private simpleCommands: NormalizedCommands
   private restrictedUsers: string[]
   private intervals: Record<string, NodeJS.Timer>
+  private isRestricted = false
 
   constructor(settings: Options) {
     this.client = new Client({ intents })
@@ -50,8 +49,6 @@ export class Lyme {
 
   async start() {
     this.client = new Client({ intents })
-    await this.registerSimpleCommands()
-    await this.registerRestrictedUsers()
     this.setupEventListeners()
     this.setupIntervals()
     await this.client.login(process.env.DISCORD_TOKEN as string)
@@ -66,22 +63,13 @@ export class Lyme {
     await this.start()
   }
 
-  private async registerSimpleCommands() {
-    const commands = await db.command.findMany({ include: { aliases: true } })
-    const normalizedCommands: NormalizedCommands = {}
-
-    commands.forEach(({ name, response, responseType, aliases }) => {
-      const commandSetting = { response, responseType }
-      normalizedCommands[name] = commandSetting
-      aliases.forEach(({ alias }) => {
-        normalizedCommands[alias] = commandSetting
-      })
-    })
-
-    this.simpleCommands = normalizedCommands
+  private restrict() {
+    this.isRestricted = true
   }
 
-  private async registerRestrictedUsers() {}
+  private free() {
+    this.isRestricted = false
+  }
 
   private setupEventListeners() {
     this.client.once('ready', this.onReady)
@@ -103,9 +91,10 @@ export class Lyme {
       return
     }
 
-    console.log({ list: this.restrictedUsers })
-
-    if (message.content.trim().startsWith('!')) {
+    if (
+      message.content.trim().startsWith('!') ||
+      message.content.trim().startsWith('~')
+    ) {
       return this.onCommand(message)
     }
 
@@ -141,7 +130,9 @@ export class Lyme {
       '!avatar',
       '!av',
       '!joke',
-      '!jokes'
+      '!jokes',
+      '~restrict',
+      '~free'
     ])
 
     if (validCommands.has(commandName)) {
@@ -200,24 +191,28 @@ export class Lyme {
       return joke(message)
     }
 
-    return simple({
-      message,
-      registeredCommands: this.simpleCommands,
-      commandName,
-      assetsPath: this.assetsPath
-    })
+    if (commandName === '~restrict') {
+      return this.restrict()
+    }
+
+    if (commandName === '~free') {
+      return this.free()
+    }
   }
 
   private async handleBotDiscussion(message: Message) {
-    await message.channel.sendTyping()
+    console.log(this.isRestricted)
+    console.log(this.isRestricted)
+    console.log(this.isRestricted)
 
-    // if (
-    //   message.author.id !== this.botInfo.adminId &&
-    //   message.channel.id !== this.botInfo.channelId &&
-    //   message.channel.id !== this.botInfo.debugChannelId
-    // ) {
-    //   return
-    // }
+    if (this.isRestricted && message.channel.id !== this.botInfo.channelId) {
+      console.log('inside here')
+      return
+    }
+
+    console.log('outside here')
+
+    await message.channel.sendTyping()
 
     const user = message.author.username
     const question = message.cleanContent
@@ -231,9 +226,7 @@ export class Lyme {
       message.author.username === '.zselect' &&
       message.content.toLowerCase().startsWith('good morning')
     ) {
-      message.reply(
-        'Good morning Neko! :blush:\nEveryone, please remember to subscribe to https://www.youtube.com/@zselect7791'
-      )
+      message.reply('Good morning Neko! :blush')
     }
   }
 

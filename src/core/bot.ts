@@ -1,11 +1,10 @@
 import { Client, Message } from 'discord.js'
 import { intents } from './intents'
 import { ChatService } from './services/openai'
-import { ChatCompletionRequestMessage } from 'openai'
 
 interface Options {
   token: string
-  prompts: string[]
+  prompt: string
   info: {
     id: string
     roleId: string
@@ -15,27 +14,23 @@ interface Options {
 
 export abstract class Bot {
   protected client = new Client({ intents })
-  protected chat = new ChatService()
+  protected chat: ChatService
   protected token: string
-  protected prompts: ChatCompletionRequestMessage[]
   protected info: Options['info']
   protected isRestricted = false
 
-  constructor({ info, token, prompts }: Options) {
+  constructor({ info, token, prompt }: Options) {
     const channelId = process.env.LEMYN_LYME_CHANNEL_ID as string
     this.info = { ...info, channelId }
     this.token = token
-    this.prompts = prompts.map((prompt) => ({
-      role: 'system',
-      content: prompt
-    }))
+    this.chat = new ChatService({ prompt })
   }
 
   async start() {
     this.client = new Client({ intents })
     this.setupEventListeners()
     this.setupIntervals()
-    await this.client.login(process.env.DISCORD_TOKEN as string)
+    await this.client.login(this.token)
   }
 
   async stop() {
@@ -89,8 +84,7 @@ export abstract class Bot {
 
     const user = message.author.username
     const question = message.cleanContent
-    const { prompts } = this
-    const response = await this.chat.ask({ user, question, prompts })
+    const response = await this.chat.ask({ user, question })
 
     message.reply(response ?? 'Unabled to generate a response')
   }

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
     "dev": "nodemon src/index.ts",
     "start": "forever start dist/index.js",
     "stop": "forever stop dist/index.js",

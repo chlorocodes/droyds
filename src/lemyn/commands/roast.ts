@@ -1,0 +1,21 @@
+import { Message } from 'discord.js'
+import { roaster } from '../../core/services/roaster'
+
+const greetings = ['Yo', 'Hey', 'Sup']
+
+export async function roast(message: Message) {
+  const victim = message.mentions?.members?.at(0) ?? message.author
+
+  const greeting = greetings[Math.floor(Math.random() * greetings.length)]
+  const insult = await roaster.roast()
+
+  if (victim.id === message.author.id) {
+    return message.channel.send(insult)
+  }
+
+  const formattedInsult = `${greeting} <@${victim.id}> – ${
+    insult[0].toLowerCase() + insult.slice(1)
+  }`
+
+  message.channel.send(formattedInsult)
+}

@@ -1,0 +1,6 @@
+export { help } from './help'
+export { translate } from './translate'
+export { avatar } from './avatar'
+export { compliment } from './compliment'
+export { fact } from './fact'
+export { joke } from './joke'

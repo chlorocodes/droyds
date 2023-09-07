@@ -13,7 +13,7 @@ npm run clean
 npm run build
 
 # Send generated server/website code + configs to remote server
-scp -r dist server/package.json $user@$host:$serverRoot
+scp -r dist package.json $user@$host:$serverRoot
 
 # Install latest dependencies, run the latest db migrations, and restart the remote server
 ssh -t $user@$host << EOF
@@ -24,11 +24,6 @@ ssh -t $user@$host << EOF
   echo "Installing latest dependencies..."
   echo "======================================================="
   npm install
-
-  echo -e "\n\n======================================================="
-  echo "Running latest database migrations..."
-  echo "======================================================="
-  npm run migrate:deploy
 
   echo -e "\n\n======================================================="
   echo "Restarting server..."

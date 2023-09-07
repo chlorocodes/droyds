@@ -10,15 +10,21 @@ npm install
 echo -e "\n\n============================================"
 echo "Creating server .env skeleton..."
 echo "============================================"
-echo "NODE_ENV=development" > ./src/server/.env
 echo "PORT=3000" >> ./src/server/.env
-echo "DB_URL=file:./lyme.db" >> ./src/server/.env
-echo "NODE_ENV=production" >> ./src/server/.env
-echo "DISCORD_TOKEN=<discordToken>">> ./src/server/.env
-echo "DISCORD_CLIENT_ID=<clientId>" >> ./src/server/.env
-echo "DISCORD_CLIENT_SECRET=<clientSecret>" >> ./src/server/.env
-echo "DISCORD_REDIRECT_URI=<redirectUri>" >> ./src/server/.env
+echo "NODE_ENV=development" >> ./src/server/.env
+echo "LYME_TOKEN=<discordToken>">> ./src/server/.env
+echo "LEMYN_TOKEN=<discordToken>">> ./src/server/.env
 echo "OPENAI_TOKEN=<openAIToken>" >> ./src/server/.env
+echo "API_NINJA_KEY=<openAIToken>" >> ./src/server/.env
+echo "GOOGLE_CLOUD_PROJECT_ID=<openAIToken>" >> ./src/server/.env
+echo "CAPTCHA_API_KEY=<openAIToken>" >> ./src/server/.env
+echo "LEMYN_LYME_CHANNEL_ID=<openAIToken>" >> ./src/server/.env
+echo "LEMYN_USER_ID=<openAIToken>" >> ./src/server/.env
+echo "LEMYN_ROLE_ID=<openAIToken>" >> ./src/server/.env
+echo "LYME_USER_ID=<openAIToken>" >> ./src/server/.env
+echo "LYME_ROLE_ID=<openAIToken>" >> ./src/server/.env
+echo "BOT_ROLE_ID=<openAIToken>" >> ./src/server/.env
+echo "ADMIN_ID=<openAIToken>" >> ./src/server/.env
 echo -e "Successfully created src/server/.env file.\n\n"
 
 echo "============================================"

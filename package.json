@@ -1,5 +1,5 @@
 {
-  "name": "@lyme/server",
+  "name": "@cytrus/bots",
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",

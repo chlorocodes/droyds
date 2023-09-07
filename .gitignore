@@ -1,10 +1,10 @@
 node_modules
 dist
 .env
+.vscode
 .npmignore
 config.json
 google-keys.json
 .DS_Store
 *.db
 *.db-journal
-server/src/services/archiver/screenshots/

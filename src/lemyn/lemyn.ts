@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 import { Bot } from '../core/bot'
-import { abuse, mock, roast, snitch } from './commands'
+import { abuse, mock, pickup, roast, snitch } from './commands'
 
 export class Lemyn extends Bot {
   constructor() {
@@ -17,7 +17,14 @@ export class Lemyn extends Bot {
 
   onCommand(message: Message) {
     const [commandName] = message.cleanContent.trim().split(' ')
-    const validCommands = new Set(['!abuse', '!roast', '!mock', '!snitch'])
+
+    const validCommands = new Set([
+      '!abuse',
+      '!roast',
+      '!mock',
+      '!snitch',
+      '!pickup'
+    ])
 
     if (validCommands.has(commandName)) {
       message.channel.sendTyping()
@@ -37,6 +44,10 @@ export class Lemyn extends Bot {
 
     if (commandName === '!snitch') {
       return snitch(message)
+    }
+
+    if (commandName.startsWith('!pickup')) {
+      return pickup(message)
     }
   }
 }

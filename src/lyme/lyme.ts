@@ -1,6 +1,7 @@
-import { Message } from 'discord.js'
+import { Message, TextChannel } from 'discord.js'
 import { Bot } from '../core/bot'
 import { avatar, compliment, fact, help, joke, translate } from './commands'
+import { apiNinjasService } from '../core/services/api-ninjas'
 
 export class Lyme extends Bot {
   constructor() {
@@ -57,6 +58,18 @@ export class Lyme extends Bot {
     if (commandName === '!joke' || commandName === '!jokes') {
       return joke(message)
     }
+  }
+
+  setupIntervals() {
+    const oneDay = 1000 * 60 * 60 * 24
+    setInterval(async () => {
+      const channelId = process.env.SALOON_CHANNEL_ID as string
+      const saloon = (await this.client.channels.cache.get(
+        channelId
+      )) as TextChannel
+      const [fact] = await apiNinjasService.getFacts(1)
+      saloon.send(`Fact of the day: ${fact}`)
+    }, oneDay)
   }
 }
 

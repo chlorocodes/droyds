@@ -55,6 +55,15 @@ export async function help(message: Message) {
           'When used as a reply to a message, it will reply with a compliment to the author of the parent message. If this message is used standalone, it will just post a random compliment not directed at anyone.'
       },
       {
+        name: '!compliment~[number]',
+        value: 'Generates a specified amount of compliments'
+      },
+      {
+        name: '!compliment~[number] [user]',
+        value:
+          'Generates a specified amount of compliments for the specified user'
+      },
+      {
         name: '!roast',
         value:
           'When used as a reply to a message, it will reply with a roast to the author of the parent message. If this message is used standalone, it will just post a random roast not directed at anyone.'
@@ -72,7 +81,7 @@ export async function help(message: Message) {
       {
         name: '!snitch',
         value:
-          "This command ust be used as a reply to another message, and it alerts the authorities of that message's contents"
+          "This command can be used as a reply to another message, and it alerts the authorities of that message's contents. Otherwise, it just tells the authorities to look at recent messages."
       },
       {
         name: '!abuse [user] [new username]',

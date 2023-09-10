@@ -46,7 +46,7 @@ export class Lyme extends Bot {
       return fact(message)
     }
 
-    if (commandName === '!compliment') {
+    if (commandName.startsWith('!compliment')) {
       return compliment(message)
     }
 

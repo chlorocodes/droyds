@@ -54,9 +54,14 @@ export abstract class Bot {
   }
 
   protected onMessage = (message: Message) => {
-    if (message.author.bot) {
+    if (
+      message.author.bot ||
+      message.channel.id !== process.env.DEBUG_CHANNEL_ID
+    ) {
       return
     }
+
+    console.log(message)
 
     if (message.content.startsWith('!')) {
       return this.onCommand(message)

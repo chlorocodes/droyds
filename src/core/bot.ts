@@ -56,7 +56,8 @@ export abstract class Bot {
   protected onMessage = (message: Message) => {
     if (
       message.author.bot ||
-      message.channel.id !== process.env.DEBUG_CHANNEL_ID
+      (process.env.NODE_ENV === 'development' &&
+        message.channel.id !== process.env.DEBUG_CHANNEL_ID)
     ) {
       return
     }

@@ -1,12 +1,14 @@
 import { Client, Message } from 'discord.js'
 import { intents } from './intents'
 import { ChatService } from './services/openai'
+import { ChatCompletionRequestMessage } from 'openai'
 
 interface Options {
   token: string
   prompt: string
   info: {
     id: string
+    name: string
     roleId: string
     channelId?: string
   }
@@ -42,6 +44,14 @@ export abstract class Bot {
     await this.start()
   }
 
+  addToConversation(message: string) {
+    this.chat.addToConversation({
+      role: 'assistant',
+      name: this.info.name,
+      content: message
+    })
+  }
+
   protected setupEventListeners() {
     this.client.once('ready', this.onReady)
     this.client.on('messageCreate', this.onMessage)
@@ -54,6 +64,8 @@ export abstract class Bot {
   }
 
   protected onMessage = (message: Message) => {
+    console.log(message)
+
     if (
       message.author.bot ||
       (process.env.NODE_ENV === 'development' &&
@@ -61,8 +73,6 @@ export abstract class Bot {
     ) {
       return
     }
-
-    console.log(message)
 
     if (message.content.startsWith('!')) {
       return this.onCommand(message)

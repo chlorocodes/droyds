@@ -8,6 +8,7 @@ export class Lyme extends Bot {
     super({
       token: process.env.LYME_TOKEN as string,
       info: {
+        name: 'Lyme',
         id: process.env.LYME_USER_ID as string,
         roleId: process.env.LYME_ROLE_ID as string
       },

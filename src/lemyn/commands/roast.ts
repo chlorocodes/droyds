@@ -1,5 +1,6 @@
 import { Message } from 'discord.js'
 import { roaster } from '../../core/services/roaster'
+import { lemyn } from '../lemyn'
 
 const greetings = ['Yo', 'Hey', 'Sup']
 
@@ -17,5 +18,6 @@ export async function roast(message: Message) {
     insult[0].toLowerCase() + insult.slice(1)
   }`
 
+  lemyn.addToConversation(formattedInsult)
   message.channel.send(formattedInsult)
 }

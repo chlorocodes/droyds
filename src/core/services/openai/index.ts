@@ -6,8 +6,8 @@ interface Options {
 }
 
 export class ChatService {
+  conversation: ChatCompletionRequestMessage[] = []
   private model: string
-  private conversation: ChatCompletionRequestMessage[] = []
   private prompt: ChatCompletionRequestMessage
   private api: OpenAIApi = new OpenAIApi(
     new Configuration({
@@ -65,5 +65,9 @@ export class ChatService {
       this.conversation.push(reply)
       return reply.content
     }
+  }
+
+  addToConversation(message: ChatCompletionRequestMessage) {
+    this.conversation.push(message)
   }
 }

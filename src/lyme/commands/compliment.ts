@@ -1,5 +1,6 @@
 import { APIEmbed, Message } from 'discord.js'
 import { complimenter } from '../../core/services/complimenter'
+import { lyme } from '../lyme'
 
 const greetings = ['Yo', 'Hey', 'Sup', 'Hi']
 
@@ -13,6 +14,7 @@ export async function compliment(message: Message) {
   const [compliment] = await complimenter.getCompliments()
 
   if (complimentee.id === message.author.id) {
+    lyme.addToConversation(compliment)
     return message.channel.send(compliment)
   }
 
@@ -20,6 +22,7 @@ export async function compliment(message: Message) {
     compliment[0].toLowerCase() + compliment.slice(1)
   }`
 
+  lyme.addToConversation(formattedCompliment)
   message.channel.send(formattedCompliment)
 }
 

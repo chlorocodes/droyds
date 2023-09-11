@@ -7,6 +7,7 @@ export class Lemyn extends Bot {
     super({
       token: process.env.LEMYN_TOKEN as string,
       info: {
+        name: 'Lemyn',
         id: process.env.LEMYN_USER_ID as string,
         roleId: process.env.LEMYN_ROLE_ID as string
       },

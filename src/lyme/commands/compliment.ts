@@ -1,5 +1,5 @@
 import { APIEmbed, Message } from 'discord.js'
-import { complimenter } from '../../core/services/complimenter'
+import { complimenter } from '../../common/services/complimenter'
 import { lyme } from '../lyme'
 
 const greetings = ['Yo', 'Hey', 'Sup', 'Hi']

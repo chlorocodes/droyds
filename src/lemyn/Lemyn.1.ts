@@ -9,7 +9,7 @@ export class Lemyn extends Bot {
       token: process.env.LEMYN_TOKEN as string,
       info: {
         name: 'Lemyn',
-        color: 0xf6f822,
+        color: 16185378,
         id: process.env.LEMYN_USER_ID as string,
         roleId: process.env.LEMYN_ROLE_ID as string
       },
@@ -19,8 +19,6 @@ export class Lemyn extends Bot {
   }
 
   onCommand(message: Message) {
-    super.onCommand(message)
-
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
@@ -28,7 +26,8 @@ export class Lemyn extends Bot {
       '!roast',
       '!mock',
       '!snitch',
-      '!pickup'
+      '!pickup',
+      '!convo'
     ])
 
     if (validCommands.has(commandName)) {
@@ -54,7 +53,12 @@ export class Lemyn extends Bot {
     if (commandName.startsWith('!pickup')) {
       return pickup(message)
     }
+
+    if (
+      commandName.startsWith('!convo') &&
+      args[0].toLowerCase().includes(this.info.name)
+    ) {
+      return convo(message)
+    }
   }
 }
-
-export const lemyn = new Lemyn()

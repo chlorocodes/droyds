@@ -1,7 +1,8 @@
 import { Client, Message } from 'discord.js'
 import { intents } from './intents'
 import { ChatService } from './services/openai'
-import { ChatCompletionRequestMessage } from 'openai'
+import { convo } from './commands/convo'
+import { clearConvo } from './commands/clearConvo'
 
 interface Options {
   token: string
@@ -9,17 +10,18 @@ interface Options {
   info: {
     id: string
     name: string
+    color: number
     roleId: string
     channelId?: string
   }
 }
 
-export abstract class Bot {
+export class Bot {
+  info: Options['info']
   protected client = new Client({ intents })
-  protected chat: ChatService
-  protected token: string
-  protected info: Options['info']
-  protected isRestricted = false
+  private token: string
+  private chat: ChatService
+  private isRestricted = false
 
   constructor({ info, token, prompt }: Options) {
     const channelId = process.env.LEMYN_LYME_CHANNEL_ID as string
@@ -52,6 +54,14 @@ export abstract class Bot {
     })
   }
 
+  getConversation() {
+    return this.chat.getConversation(this.info.name)
+  }
+
+  clearConversation() {
+    this.chat.clearConversation()
+  }
+
   protected setupEventListeners() {
     this.client.once('ready', this.onReady)
     this.client.on('messageCreate', this.onMessage)
@@ -75,11 +85,13 @@ export abstract class Bot {
     }
 
     if (message.content.startsWith('!')) {
-      return this.onCommand(message)
+      this.onCommand(message)
+      return
     }
 
     if (message.content.startsWith('~')) {
-      return this.onAdminCommand(message)
+      this.onAdminCommand(message)
+      return
     }
 
     const isReplyToBot = message.mentions.repliedUser?.id === this.info.id
@@ -119,5 +131,29 @@ export abstract class Bot {
     }
   }
 
-  protected abstract onCommand(message: Message): void
+  protected onCommand(message: Message): unknown {
+    const [commandName, ...args] = message.cleanContent.trim().split(' ')
+    const validCommands = new Set(['!convo', '!clearConvo'])
+
+    if (
+      validCommands.has(commandName) &&
+      args.join(' ').includes(this.info.name)
+    ) {
+      message.channel.sendTyping()
+    }
+
+    if (
+      commandName.startsWith('!convo') &&
+      args[0].toLowerCase().includes(this.info.name.toLowerCase())
+    ) {
+      return convo(message, this.getConversation(), this.info)
+    }
+
+    if (
+      commandName.toLowerCase().startsWith('!clearconvo') &&
+      args[0].toLowerCase().includes(this.info.name.toLowerCase())
+    ) {
+      return clearConvo(message, this.clearConversation.bind(this), this.info)
+    }
+  }
 }

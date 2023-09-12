@@ -1,7 +1,8 @@
 import { Message, TextChannel } from 'discord.js'
-import { Bot } from '../core/bot'
+import { Bot } from '../common/bot'
 import { avatar, compliment, fact, help, joke, translate } from './commands'
-import { apiNinjasService } from '../core/services/api-ninjas'
+import { apiNinjasService } from '../common/services/api-ninjas'
+import { convo } from '../common/commands/convo'
 
 export class Lyme extends Bot {
   constructor() {
@@ -9,6 +10,7 @@ export class Lyme extends Bot {
       token: process.env.LYME_TOKEN as string,
       info: {
         name: 'Lyme',
+        color: 0x8cdd50,
         id: process.env.LYME_USER_ID as string,
         roleId: process.env.LYME_ROLE_ID as string
       },
@@ -18,6 +20,8 @@ export class Lyme extends Bot {
   }
 
   onCommand(message: Message) {
+    super.onCommand(message)
+
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([

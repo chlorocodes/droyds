@@ -14,6 +14,7 @@ export class ChatService {
       apiKey: process.env.OPENAI_TOKEN
     })
   )
+  private conversationHistorySize = 10
 
   constructor({ model = 'gpt-3.5-turbo', prompt }: Options) {
     this.model = model
@@ -39,8 +40,11 @@ export class ChatService {
       content: question
     })
 
-    if (this.conversation.slice(1).length > 10) {
-      this.conversation = [this.prompt, ...this.conversation.slice(-10)]
+    if (this.conversation.slice(1).length > this.conversationHistorySize) {
+      this.conversation = [
+        this.prompt,
+        ...this.conversation.slice(-this.conversationHistorySize)
+      ]
     }
 
     try {
@@ -69,5 +73,16 @@ export class ChatService {
 
   addToConversation(message: ChatCompletionRequestMessage) {
     this.conversation.push(message)
+  }
+
+  getConversation(name: string) {
+    return this.conversation.slice(1).map((message) => ({
+      ...message,
+      name: message.name ?? name
+    }))
+  }
+
+  clearConversation() {
+    this.conversation = [this.prompt]
   }
 }

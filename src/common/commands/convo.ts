@@ -17,6 +17,7 @@ function createEmbed(
 ) {
   const embed: APIEmbed = {
     title: `Conversation History (${botInfo.name})`,
+    description: 'These are the last 10 messages from the conversation',
     color: botInfo.color,
     fields: conversation.map((message) => ({
       name: (message.name as string) ?? botInfo.name,

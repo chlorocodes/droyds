@@ -1,7 +1,6 @@
 import { Message } from 'discord.js'
 import { Bot } from '../common/bot'
 import { abuse, mock, pickup, roast, snitch } from './commands'
-import { convo } from '../common/commands/convo'
 
 export class Lemyn extends Bot {
   constructor() {

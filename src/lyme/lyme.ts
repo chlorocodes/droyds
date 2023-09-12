@@ -73,7 +73,9 @@ export class Lyme extends Bot {
         channelId
       )) as TextChannel
       const [fact] = await apiNinjasService.getFacts(1)
-      saloon.send(`Fact of the day: ${fact}`)
+      const message = `Fact of the day: ${fact}`
+      saloon.send(message)
+      this.addToConversation(message)
     }, oneDay)
   }
 }

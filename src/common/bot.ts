@@ -54,11 +54,11 @@ export class Bot {
     })
   }
 
-  getConversation() {
+  protected getConversation() {
     return this.chat.getConversation(this.info.name)
   }
 
-  clearConversation() {
+  protected clearConversation() {
     this.chat.clearConversation()
   }
 

@@ -1,14 +1,15 @@
 import { Message } from 'discord.js'
-import { Bot } from '../common/bot'
+import { Bot } from '../core/bot'
 import { abuse, mock, pickup, roast, snitch } from './commands'
 
 export class Lemyn extends Bot {
   constructor() {
     super({
       token: process.env.LEMYN_TOKEN as string,
-      info: {
+      settings: {
         name: 'Lemyn',
         color: 0xf6f822,
+        isChatEnabled: true,
         id: process.env.LEMYN_USER_ID as string,
         roleId: process.env.LEMYN_ROLE_ID as string
       },

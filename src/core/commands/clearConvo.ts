@@ -4,7 +4,7 @@ import { Bot } from '../bot'
 export async function clearConvo(
   message: Message,
   clearConvo: () => void,
-  botInfo: Bot['info']
+  botInfo: Bot['settings']
 ) {
   clearConvo()
   return message.reply(`${botInfo.name}'s conversation history has been erased`)

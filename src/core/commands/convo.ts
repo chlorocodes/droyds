@@ -5,14 +5,14 @@ import { Bot } from '../bot'
 export async function convo(
   message: Message,
   conversation: ChatCompletionRequestMessage[],
-  botInfo: Bot['info']
+  botInfo: Bot['settings']
 ) {
   const messageEmbed = createEmbed(botInfo, conversation)
   return message.channel.send({ embeds: [messageEmbed] })
 }
 
 function createEmbed(
-  botInfo: Bot['info'],
+  botInfo: Bot['settings'],
   conversation: ChatCompletionRequestMessage[]
 ) {
   const embed: APIEmbed = {

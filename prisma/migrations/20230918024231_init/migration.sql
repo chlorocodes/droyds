@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "state" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "current_story_id" TEXT NOT NULL
+    "current_story_id" TEXT NOT NULL,
+    "last_author_id" TEXT NOT NULL
 );
 
 -- CreateTable

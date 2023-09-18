@@ -1,6 +1,9 @@
-import { APIEmbed, User } from 'discord.js'
+import { APIEmbed, Message, User } from 'discord.js'
 import { db } from './database'
 import { graype } from '../../graype/graype'
+import { delay } from '../utils/delay'
+
+const sentenceTerminators = ['.', '?', '!']
 
 interface Story {
   id: string
@@ -20,27 +23,95 @@ class StoryService {
     this.initialize()
   }
 
-  isValidWord(message: string) {
-    if (message.split(' ').length !== 1) {
+  async onWord(message: Message) {
+    const isValid = await this.validate(message)
+
+    if (!isValid) {
+      return
+    }
+
+    const word = message.content
+    this.addWord(word, message.author)
+    message.react('✅')
+
+    const lastCharacter = word.slice(-1)
+    if (sentenceTerminators.includes(lastCharacter)) {
+      this.display(message)
+    }
+  }
+
+  async reset(message: Message) {
+    await this.deleteCurrentStory()
+    this.story = await this.createNextStory()
+    message.reply('Story has been reset')
+  }
+
+  async end(message: Message) {
+    await db.story.update({
+      where: { id: this.story.id },
+      data: { isComplete: true }
+    })
+    this.story = await this.createNextStory()
+    this.display(message)
+  }
+
+  display(message: Message) {
+    const embed = {
+      title: 'Current Story:',
+      description: this.story.text,
+      color: graype.settings.color
+    }
+    message.channel.send({ embeds: [embed] })
+  }
+
+  private async validate(message: Message) {
+    const isValidWord = await this.validateWord(message)
+    const isValidAuthor = await this.validateAuthor(message)
+    return isValidWord && isValidAuthor
+  }
+
+  private async validateWord(message: Message) {
+    const newWord = message.cleanContent.trim()
+
+    if (newWord.split(' ').length > 1) {
+      this.sendErrorMessage(message, 'Please send 1 word at a time')
       return false
     }
 
     const [lastWord] = this.story.text.split(' ').slice(-1)
-    if (message === lastWord) {
+    if (newWord === lastWord) {
+      this.sendErrorMessage(message, "You can't repeat the same word")
       return false
     }
 
     return true
   }
 
-  async addWord(word: string, author: User) {
+  private validateAuthor(message: Message) {
+    if (message.author.id === this.lastAuthor) {
+      this.sendErrorMessage(
+        message,
+        'The same person cannot send a word twice in a row'
+      )
+      return false
+    }
+
+    return true
+  }
+
+  private async sendErrorMessage(message: Message, error: string) {
+    const reply = await message.channel.send(error)
+    await delay()
+    await reply.delete()
+    await message.delete()
+  }
+
+  private async addWord(word: string, author: User) {
     if (!this.isInitialized) {
       return
     }
 
-    const terminators = ['?', '!', '.']
-
-    if (terminators.includes(word)) {
+    if (sentenceTerminators.includes(word)) {
       this.story.text += word
     } else {
       this.story.text += ` ${word}`
@@ -48,7 +119,17 @@ class StoryService {
 
     const { id: userId, username } = author
 
+    this.lastAuthor = userId
+
     await db.$transaction([
+      db.state.update({
+        where: {
+          id: this.stateId
+        },
+        data: {
+          lastAuthorId: userId
+        }
+      }),
       db.story.update({
         where: {
           id: this.story.id
@@ -65,27 +146,6 @@ class StoryService {
     ])
   }
 
-  async reset() {
-    await this.deleteCurrentStory()
-    this.story = await this.createNextStory()
-  }
-
-  async end() {
-    await db.story.update({
-      where: { id: this.story.id },
-      data: { isComplete: true }
-    })
-    this.story = await this.createNextStory()
-  }
-
-  display(): APIEmbed {
-    return {
-      title: 'Current Story:',
-      description: this.story.text,
-      color: graype.settings.color
-    }
-  }
-
   private async initialize() {
     const state = await db.state.findFirst()
 
@@ -96,7 +156,8 @@ class StoryService {
       this.story = await this.createNextStory()
       const { id } = await db.state.create({
         data: {
-          currentStoryId: this.story.id
+          currentStoryId: this.story.id,
+          lastAuthorId: ''
         }
       })
       this.stateId = id

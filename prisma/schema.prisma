@@ -10,6 +10,7 @@ datasource db {
 model State {
   id             String @id @default(uuid()) @map("id")
   currentStoryId String @map("current_story_id")
+  lastAuthorId   String @map("last_author_id")
 
   @@map("state")
 }

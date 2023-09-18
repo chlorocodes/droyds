@@ -4,7 +4,8 @@ import { stories } from '../core/services/stories'
 import { delay } from '../core/utils/delay'
 
 export class Graype extends Bot {
-  validCommands = ['!story', '!end', '!reset']
+  isOn = true
+  validCommands = ['!story', '!end', '!reset', '!on', '!off']
 
   constructor() {
     super({
@@ -34,23 +35,8 @@ export class Graype extends Bot {
       return
     }
 
-    const word = message.content
-
-    if (!stories.isValidWord(word)) {
-      message.delete()
-      const reply = await message.channel.send('Invalid word')
-      await delay()
-      reply.delete()
-      return
-    }
-
-    message.react('✅')
-    stories.addWord(word, message.author)
-
-    const terminators = ['.', '?', '!']
-    if (terminators.includes(word.slice(-1))) {
-      const embed = stories.display()
-      message.channel.send({ embeds: [embed] })
+    if (this.isOn) {
+      stories.onWord(message)
     }
   }
 
@@ -59,24 +45,25 @@ export class Graype extends Bot {
     message.channel.sendTyping()
 
     if (commandName === '!story') {
-      const storyEmbed = stories.display()
-      return message.channel.send({ embeds: [storyEmbed] })
+      return stories.display(message)
     }
 
     if (commandName === '!end') {
-      console.log('this is running')
-
-      await stories.end()
-      const embed = stories.display()
-      return message.channel.send({
-        content: 'The story is finished! You can see the complete story below:',
-        embeds: [embed]
-      })
+      return stories.end(message)
     }
 
     if (commandName === '!reset') {
-      await stories.reset()
-      return message.reply('Story has been reset')
+      return stories.reset(message)
+    }
+
+    if (commandName === '!on') {
+      this.isOn = true
+      return
+    }
+
+    if (commandName === '!off') {
+      this.isOn = false
+      return
     }
   }
 }

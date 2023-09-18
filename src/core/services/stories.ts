@@ -10,6 +10,7 @@ interface Story {
 class StoryService {
   isInitialized = false
   stateId = ''
+  lastAuthor = ''
   story: Story = {
     id: '',
     text: ''
@@ -20,7 +21,16 @@ class StoryService {
   }
 
   isValidWord(message: string) {
-    return message.split(' ').length === 1
+    if (message.split(' ').length !== 1) {
+      return false
+    }
+
+    const [lastWord] = this.story.text.split(' ').slice(-1)
+    if (message === lastWord) {
+      return false
+    }
+
+    return true
   }
 
   async addWord(word: string, author: User) {
@@ -28,7 +38,14 @@ class StoryService {
       return
     }
 
-    this.story.text += ` ${word}`
+    const terminators = ['?', '!', '.']
+
+    if (terminators.includes(word)) {
+      this.story.text += word
+    } else {
+      this.story.text += ` ${word}`
+    }
+
     const { id: userId, username } = author
 
     await db.$transaction([
@@ -37,8 +54,7 @@ class StoryService {
           id: this.story.id
         },
         data: {
-          text: this.story.text,
-          authors: {}
+          text: this.story.text
         }
       }),
       db.author.upsert({
@@ -49,6 +65,11 @@ class StoryService {
     ])
   }
 
+  async reset() {
+    await this.deleteCurrentStory()
+    this.story = await this.createNextStory()
+  }
+
   async end() {
     await db.story.update({
       where: { id: this.story.id },
@@ -57,7 +78,7 @@ class StoryService {
     this.story = await this.createNextStory()
   }
 
-  displayStory(): APIEmbed {
+  display(): APIEmbed {
     return {
       title: 'Current Story:',
       description: this.story.text,
@@ -75,7 +96,6 @@ class StoryService {
       this.story = await this.createNextStory()
       const { id } = await db.state.create({
         data: {
-          totalWordCount: 0,
           currentStoryId: this.story.id
         }
       })
@@ -107,6 +127,12 @@ class StoryService {
     }
 
     return { id, text }
+  }
+
+  private async deleteCurrentStory() {
+    await db.story.deleteMany({
+      where: { id: this.story.id }
+    })
   }
 }
 

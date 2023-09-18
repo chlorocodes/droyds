@@ -1,9 +1,7 @@
 -- CreateTable
 CREATE TABLE "state" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "current_story_id" TEXT NOT NULL,
-    "total_word_count" INTEGER NOT NULL,
-    CONSTRAINT "state_current_story_id_fkey" FOREIGN KEY ("current_story_id") REFERENCES "stories" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "current_story_id" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -18,5 +16,5 @@ CREATE TABLE "authors" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "username" TEXT NOT NULL,
     "story_id" TEXT NOT NULL,
-    CONSTRAINT "authors_story_id_fkey" FOREIGN KEY ("story_id") REFERENCES "stories" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "authors_story_id_fkey" FOREIGN KEY ("story_id") REFERENCES "stories" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

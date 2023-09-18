@@ -10,9 +10,6 @@ datasource db {
 model State {
   id             String @id @default(uuid()) @map("id")
   currentStoryId String @map("current_story_id")
-  totalWordCount Int    @map("total_word_count")
-
-  story Story @relation(fields: [currentStoryId], references: [id])
 
   @@map("state")
 }
@@ -22,7 +19,6 @@ model Story {
   text       String  @map("text")
   isComplete Boolean @default(false) @map("is_complete")
 
-  stats   State[]
   authors Author[]
 
   @@map("stories")
@@ -33,7 +29,7 @@ model Author {
   username String @map("username")
   storyId  String @map("story_id")
 
-  story Story @relation(fields: [storyId], references: [id])
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
   @@map("authors")
 }

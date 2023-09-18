@@ -10,7 +10,8 @@
     "stop": "forever stop dist/index.js",
     "restart": "forever restart dist/index.js",
     "deploy": "./tasks/deploy",
-    "migrate:dev": "npx prisma migrate dev"
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.2.2",

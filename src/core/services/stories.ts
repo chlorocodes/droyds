@@ -43,6 +43,7 @@ class StoryService {
   async reset(message: Message) {
     await this.deleteCurrentStory()
     this.story = await this.createNextStory()
+    this.lastAuthor = ''
     message.reply('Story has been reset')
   }
 
@@ -66,8 +67,16 @@ class StoryService {
 
   private async validate(message: Message) {
     const isValidWord = await this.validateWord(message)
+    if (!isValidWord) {
+      return false
+    }
+
     const isValidAuthor = await this.validateAuthor(message)
-    return isValidWord && isValidAuthor
+    if (!isValidAuthor) {
+      return false
+    }
+
+    return true
   }
 
   private async validateWord(message: Message) {
@@ -100,10 +109,10 @@ class StoryService {
   }
 
   private async sendErrorMessage(message: Message, error: string) {
+    await message.delete()
     const reply = await message.channel.send(error)
     await delay()
     await reply.delete()
-    await message.delete()
   }
 
   private async addWord(word: string, author: User) {

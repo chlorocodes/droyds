@@ -20,10 +20,12 @@ export class Graype extends Bot {
   }
 
   protected override async onMessage(message: Message) {
-    if (
-      message.author.bot ||
-      message.channel.id !== process.env.ONE_WORD_STORY_CHANNEL_ID
-    ) {
+    const storyChannelId =
+      process.env.NODE_ENV === 'development'
+        ? process.env.DEBUG_CHANNEL_ID
+        : process.env.ONE_WORD_STORY_CHANNEL_ID
+
+    if (message.author.bot || message.channel.id !== storyChannelId) {
       return
     }
 
@@ -41,6 +43,7 @@ export class Graype extends Bot {
 
   protected override async onCommand(message: Message) {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
+
     message.channel.sendTyping()
 
     if (commandName === '!story') {
@@ -57,12 +60,12 @@ export class Graype extends Bot {
 
     if (commandName === '!on') {
       this.isOn = true
-      return
+      return message.reply(`${this.settings.name} has been enabled`)
     }
 
     if (commandName === '!off') {
       this.isOn = false
-      return
+      return message.reply(`${this.settings.name} has been disabled`)
     }
   }
 }

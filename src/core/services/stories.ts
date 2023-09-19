@@ -3,6 +3,7 @@ import { db } from './database'
 import { graype } from '../../graype/graype'
 import { delay } from '../utils/delay'
 
+const articles = ['!', '?', ':', ';', '-', '–', '.']
 const sentenceTerminators = ['.', '?', '!']
 
 interface Story {
@@ -80,15 +81,24 @@ class StoryService {
   }
 
   private async validateWord(message: Message) {
-    const newWord = message.cleanContent.trim()
+    const input = message.cleanContent.trim()
+    const words = input.split(' ')
 
-    if (newWord.split(' ').length > 1) {
+    if (words.length > 2) {
       this.sendErrorMessage(message, 'Please send 1 word at a time')
       return false
     }
 
+    if (words.length === 2) {
+      const [first, second] = words
+      if (!articles.includes(first) && !articles.includes(second)) {
+        this.sendErrorMessage(message, 'Please send 1 word at a time')
+        return false
+      }
+    }
+
     const [lastWord] = this.story.text.split(' ').slice(-1)
-    if (newWord === lastWord) {
+    if (input === lastWord) {
       this.sendErrorMessage(message, "You can't repeat the same word")
       return false
     }

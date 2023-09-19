@@ -5,6 +5,7 @@ import { stories } from '../core/services/stories'
 export class Graype extends Bot {
   isOn = true
   validCommands = ['!story', '!end', '!reset', '!on', '!off']
+  adminRoles = ['1024519285357416478', '1036774701046960218']
 
   constructor() {
     super({
@@ -58,14 +59,20 @@ export class Graype extends Bot {
       return stories.reset(message)
     }
 
-    if (commandName === '!on') {
-      this.isOn = true
-      return message.reply(`${this.settings.name} has been enabled`)
-    }
+    const isAdmin = this.adminRoles.some((role) =>
+      message.member?.roles.cache.has(role)
+    )
 
-    if (commandName === '!off') {
-      this.isOn = false
-      return message.reply(`${this.settings.name} has been disabled`)
+    if (isAdmin) {
+      if (commandName === '!on') {
+        this.isOn = true
+        return message.reply(`${this.settings.name} has been enabled`)
+      }
+
+      if (commandName === '!off') {
+        this.isOn = false
+        return message.reply(`${this.settings.name} has been disabled`)
+      }
     }
   }
 }

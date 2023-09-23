@@ -23,7 +23,7 @@ export class Graype extends Bot {
   protected override async onMessage(message: Message) {
     const storyChannelId =
       process.env.NODE_ENV === 'development'
-        ? process.env.DEBUG_CHANNEL_ID
+        ? process.env.DEBUG_STORY_CHANNEL_ID
         : process.env.ONE_WORD_STORY_CHANNEL_ID
 
     if (message.author.bot || message.channel.id !== storyChannelId) {

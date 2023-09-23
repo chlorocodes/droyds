@@ -23,7 +23,7 @@ export async function help(message: Message) {
         value: 'Replies with an image of your avatar'
       },
       {
-        name: '!avatar @user',
+        name: '!avatar @user, !av @user',
         value: "Replies with an image of the @user's avatar"
       },
       {
@@ -56,7 +56,7 @@ export async function help(message: Message) {
       },
       {
         name: '!compliment~[number]',
-        value: 'Generates a specified amount of compliments'
+        value: 'Generates a specified amount of compliments. Ex: !compliment~5'
       },
       {
         name: '!compliment~[number] [user]',
@@ -89,20 +89,13 @@ export async function help(message: Message) {
           'Abuses a user of the server by changing their username to a new name. Currently, only Chloro can use this command but this will be updated soon. Ex: !abuse @o_kayy LymeFanboi'
       },
       {
-        name: '',
-        value: '\u200B'
+        name: '!pickup',
+        value:
+          'Replies with a pickup line. When used as a reply, it will direct the pickup line at the person.'
       },
       {
-        name: 'Text Commands',
-        value: ''
-      },
-      {
-        name: '--------------------------',
-        value: ''
-      },
-      {
-        name: '!cringidantes',
-        value: 'Mocks the original "!confidantes" command.'
+        name: '!pickup~[number]',
+        value: 'Generates a specified amount of pickuplines. Ex: !pickup~5'
       },
       {
         name: '',
@@ -117,7 +110,7 @@ export async function help(message: Message) {
         value: ''
       },
       {
-        name: '!wat, !wut, !huh, !bruh',
+        name: '!wat, !wut, !wha, !huh, !bruh',
         value: 'Replies with a picture of Daemon being like "wtf".'
       },
       {
@@ -136,7 +129,7 @@ export async function help(message: Message) {
           'Replies with a picture of Daemon telling you to go look at a mirror and cry.'
       },
       {
-        name: '!stupid',
+        name: '!stupid, !idiot, !moron, !dumb, !dumbass',
         value: 'Replies with a picture of Amado calling you stupid.'
       },
       {
@@ -144,7 +137,7 @@ export async function help(message: Message) {
         value: 'Replies with a picture of Daemon basically calling you stupid.'
       },
       {
-        name: '!bitchPls, !bitchplease',
+        name: '!bitchPls, !bitchpls, !bitchPlease, !bitchplease',
         value:
           'Replies with a picture of Daemon chillin without giving any fucks'
       }

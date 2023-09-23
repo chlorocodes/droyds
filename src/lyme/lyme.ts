@@ -2,7 +2,7 @@ import { Message, TextChannel } from 'discord.js'
 import { Bot } from '../core/bot'
 import { avatar, compliment, fact, help, joke, translate } from './commands'
 import { apiNinjasService } from '../core/services/api-ninjas'
-import { convo } from '../core/commands/convo'
+import { image, imageCommands } from '../core/commands/image'
 
 export class Lyme extends Bot {
   constructor() {
@@ -27,6 +27,7 @@ export class Lyme extends Bot {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
+      ...imageCommands,
       '!help',
       '!commands',
       '!translate',
@@ -64,6 +65,10 @@ export class Lyme extends Bot {
 
     if (commandName === '!joke' || commandName === '!jokes') {
       return joke(message)
+    }
+
+    if (imageCommands.has(commandName)) {
+      return image(commandName, message)
     }
   }
 

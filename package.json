@@ -2,7 +2,9 @@
   "name": "@cytrus/bots",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:js && npm run build:assets",
+    "build:js": "tsc",
+    "build:assets": "cp -r src/core/assets dist/core/assets",
     "clean": "rm -rf dist",
     "dev": "nodemon src/index.ts",
     "debug": "nodemon --exec 'node --inspect=0.0.0.0:9229 --require ts-node/register src/index.ts'",

@@ -55,8 +55,9 @@ function getImagePath(commandName: string) {
   return imagePath
 }
 
-export function image(commandName: string, message: Message) {
+export async function image(commandName: string, message: Message) {
   const imagePath = getImagePath(commandName)
   const files = [{ attachment: imagePath }]
-  message.channel.send({ files })
+  await message.channel.send({ files })
+  message.delete()
 }

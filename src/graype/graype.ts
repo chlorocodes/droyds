@@ -59,9 +59,9 @@ export class Graype extends Bot {
       return stories.reset(message)
     }
 
-    const isAdmin = this.adminRoles.some((role) =>
-      message.member?.roles.cache.has(role)
-    )
+    const isAdmin =
+      message.author.id === process.env.CHLORO_USER_ID ||
+      this.adminRoles.some((role) => message.member?.roles.cache.has(role))
 
     if (isAdmin) {
       if (commandName === '!on') {

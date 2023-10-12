@@ -28,6 +28,7 @@ ssh -t $user@$host << EOF
   echo -e "\n\n======================================================="
   echo "Running latest DB migrations..."
   echo "======================================================="
+  npx prisma generate
   npm run migrate:deploy
 
   echo -e "\n\n======================================================="

@@ -26,7 +26,8 @@ model Story {
 }
 
 model Author {
-  id       String @id @map("id")
+  id       String @id @default(uuid()) @map("id")
+  userId   String @map("userId")
   username String @map("username")
   storyId  String @map("story_id")
 

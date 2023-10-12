@@ -49,18 +49,25 @@ class StoryService {
   }
 
   async end(message: Message) {
-    await db.story.update({
-      where: { id: this.story.id },
-      data: { isComplete: true }
-    })
+    await db.$transaction([
+      db.story.update({
+        where: { id: this.story.id },
+        data: { isComplete: true }
+      }),
+      db.state.update({
+        where: { id: this.stateId },
+        data: { lastAuthorId: '' }
+      })
+    ])
     this.story = await this.createNextStory()
-    this.display(message)
+    this.lastAuthor = ''
+    this.display(message, 'New story started! The previous one has been saved.')
   }
 
-  display(message: Message) {
+  display(message: Message, title = 'Current Story:') {
     const embed = {
-      title: 'Current Story:',
-      description: this.story.text,
+      title,
+      description: this.story.text ?? '',
       color: graype.settings.color
     }
     message.channel.send({ embeds: [embed] })
@@ -137,32 +144,34 @@ class StoryService {
     }
 
     const { id: userId, username } = author
-
     this.lastAuthor = userId
 
-    await db.$transaction([
-      db.state.update({
+    await db.story.update({
+      where: { id: this.story.id },
+      data: { text: this.story.text }
+    })
+
+    await db.state.update({
+      where: { id: this.stateId },
+      data: { lastAuthorId: userId }
+    })
+
+    try {
+      await db.author.findFirstOrThrow({
         where: {
-          id: this.stateId
-        },
-        data: {
-          lastAuthorId: userId
+          userId,
+          storyId: this.story.id
         }
-      }),
-      db.story.update({
-        where: {
-          id: this.story.id
-        },
-        data: {
-          text: this.story.text
-        }
-      }),
-      db.author.upsert({
-        where: { id: userId, storyId: this.story.id },
-        create: { id: userId, username, storyId: this.story.id },
-        update: {}
       })
-    ])
+    } catch (error) {
+      await db.author.create({
+        data: {
+          userId,
+          username,
+          storyId: this.story.id
+        }
+      })
+    }
   }
 
   private async initialize() {

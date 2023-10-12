@@ -45,14 +45,16 @@ export class Graype extends Bot {
   protected override async onCommand(message: Message) {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
 
-    message.channel.sendTyping()
+    if (this.validCommands.includes(commandName)) {
+      message.channel.sendTyping()
+    }
 
     if (commandName === '!story') {
-      return stories.display(message)
+      return stories.displayStory(message)
     }
 
     if (commandName === '!end') {
-      return stories.end(message)
+      return stories.end(message, args.join(' '))
     }
 
     if (commandName === '!reset') {

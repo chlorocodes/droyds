@@ -1,7 +1,7 @@
 import 'dotenv/config'
-import { lemyn } from './lemyn/lemyn'
-import { lyme } from './lyme/lyme'
-import { graype } from './graype/graype'
+import { lemyn } from './bots/lemyn/lemyn'
+import { lyme } from './bots/lyme/lyme'
+import { graype } from './bots/graype/graype'
 
 lemyn.start()
 lyme.start()

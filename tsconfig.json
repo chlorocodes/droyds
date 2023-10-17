@@ -11,5 +11,5 @@
     "resolveJsonModule": true,
     "noImplicitAny": true
   },
-  "include": ["src", "commands", "config", "types", "index.ts"]
+  "include": ["src", "commands", "config", "types", "index.ts", "website"]
 }

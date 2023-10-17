@@ -1,7 +1,7 @@
 import { Story as PrismaStory, Word } from '@prisma/client'
 import { Message, User } from 'discord.js'
 import { db } from './database'
-import { graype } from '../../graype/graype'
+import { graype } from '../../bots/graype/graype'
 import { delay } from '../utils/delay'
 
 const articles = ['!', '?', ':', ';', '-', '–', '.']

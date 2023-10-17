@@ -1,5 +1,5 @@
 import { APIEmbed, Message } from 'discord.js'
-import { wingman } from '../../core/services/pickup-lines'
+import { wingman } from '../../../core/services/pickup-lines'
 
 const greetings = ['Yo', 'Hey', 'Sup', 'Hi']
 

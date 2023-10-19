@@ -1,5 +1,5 @@
 {
-  "name": "@cytrus/bots",
+  "name": "@droyds/bots",
   "version": "1.0.0",
   "scripts": {
     "build": "npm run build:js && npm run build:assets",

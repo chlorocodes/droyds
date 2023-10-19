@@ -5,8 +5,8 @@ set -x
 
 nvmScript="~/.nvm/nvm.sh"
 serverRoot="~/cytrus"
-user=$CYTRUS_USER
-host=$CYTRUS_HOST
+user=$DROYD_USER
+host=$DROYD_HOST
 
 # Build server/website
 npm run clean

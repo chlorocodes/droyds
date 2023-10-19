@@ -32,8 +32,7 @@ export class Bot {
   private isRestricted = true
 
   constructor({ settings, token, prompt = '' }: Options) {
-    const channelId = process.env.LEMYN_LYME_CHANNEL_ID as string
-    this.settings = { ...settings, channelId }
+    this.settings = settings
     this.token = token
     this.chat = new ChatService({ prompt })
   }
@@ -111,10 +110,23 @@ export class Bot {
 
   protected async onChat(message: Message) {
     const shibuyaServerId = process.env.SHIBUYA_SERVER_ID as string
+    const shibuyaChannelId = process.env.LEMYN_LYME_CHANNEL_ID as string
+
     if (
       this.isRestricted &&
       message.guild?.id === shibuyaServerId &&
-      message.channel.id !== this.settings.channelId
+      message.channel.id !== shibuyaChannelId
+    ) {
+      return
+    }
+
+    const cultServerId = process.env.CULT_SERVER_ID as string
+    const cultOtsutsukiChannelId = process.env
+      .CULT_OTSUTSUKI_CHANNEL_ID as string
+
+    if (
+      message.guild?.id === cultServerId &&
+      message.channel.id !== cultOtsutsukiChannelId
     ) {
       return
     }
@@ -133,12 +145,12 @@ export class Bot {
 
     if (commandName === '~restrict') {
       this.isRestricted = true
-      return message.reply('Cytrus bot restrictions have been enabled.')
+      return message.reply('Droyd restrictions have been enabled.')
     }
 
     if (commandName === '~free' || commandName === '~unrestrict') {
       this.isRestricted = false
-      return message.reply('Cytrus bot restrictions have been disabled.')
+      return message.reply('Droyd restrictions have been disabled.')
     }
   }
 

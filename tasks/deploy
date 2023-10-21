@@ -5,15 +5,16 @@ set -x
 
 nvmScript="~/.nvm/nvm.sh"
 serverRoot="~/cytrus"
-user=$CYTRUS_USER
-host=$CYTRUS_HOST
+user=$DROYD_USER
+host=$DROYD_HOST
 
 # Build server/website
 npm run clean
 npm run build
 
 # Send generated server/website code + configs to remote server
-scp -r dist prisma package.json package-lock.json $user@$host:$serverRoot
+scp -r dist package.json package-lock.json $user@$host:$serverRoot
+scp prisma/schema.prisma $user@$host:$serverRoot/prisma
 
 # Install latest dependencies, run the latest db migrations, and restart the remote server
 ssh -t $user@$host << EOF

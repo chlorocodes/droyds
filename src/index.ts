@@ -1,8 +1,6 @@
 import 'dotenv/config'
-import { lemyn } from './bots/lemyn/lemyn'
-import { lyme } from './bots/lyme/lyme'
-import { graype } from './bots/graype/graype'
+import * as bots from './bots'
 
-lemyn.start()
-lyme.start()
-graype.start()
+Object.values(bots).forEach((bot) => {
+  bot.start()
+})

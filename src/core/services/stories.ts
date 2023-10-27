@@ -1,4 +1,5 @@
-import { APIEmbed, Message, User } from 'discord.js'
+import { Story as PrismaStory, Word } from '@prisma/client'
+import { Message, User } from 'discord.js'
 import { db } from './database'
 import { graype } from '../../bots/graype/graype'
 import { delay } from '../utils/delay'
@@ -6,19 +7,15 @@ import { delay } from '../utils/delay'
 const articles = ['!', '?', ':', ';', '-', '–', '.']
 const sentenceTerminators = ['.', '?', '!']
 
-interface Story {
-  id: string
-  text: string
+interface Story extends PrismaStory {
+  words: Word[]
 }
 
 class StoryService {
-  isInitialized = false
   stateId = ''
+  storyId = ''
   lastAuthor = ''
-  story: Story = {
-    id: '',
-    text: ''
-  }
+  lastWord = ''
 
   constructor() {
     this.initialize()
@@ -32,47 +29,143 @@ class StoryService {
     }
 
     const word = message.content
-    this.addWord(word, message.author)
+    this.addWord(word, message)
     message.react('✅')
 
     const lastCharacter = word.slice(-1)
     if (sentenceTerminators.includes(lastCharacter)) {
-      this.display(message)
+      this.displayStory(message)
     }
   }
 
   async reset(message: Message) {
     await this.deleteCurrentStory()
-    this.story = await this.createNextStory()
+    this.storyId = await this.createNextStory()
     this.lastAuthor = ''
+    this.lastWord = ''
     message.reply('Story has been reset')
   }
 
-  async end(message: Message) {
+  async end(message: Message, storyName: string = 'Graype Story') {
+    const nextStoryId = await this.createNextStory()
     await db.$transaction([
       db.story.update({
-        where: { id: this.story.id },
-        data: { isComplete: true }
+        where: { id: this.storyId },
+        data: { isComplete: true, name: storyName }
       }),
       db.state.update({
         where: { id: this.stateId },
-        data: { lastAuthorId: '' }
+        data: {
+          currentStoryId: nextStoryId,
+          lastAuthorId: '',
+          lastWord: ''
+        }
       })
     ])
-    this.story = await this.createNextStory()
+    this.storyId = nextStoryId
     this.lastAuthor = ''
-    this.display(message, 'New story started! The previous one has been saved.')
+    this.lastWord = ''
+    await this.displayStory(
+      message,
+      'New story started! The previous one has been saved.'
+    )
   }
 
-  display(message: Message, title = 'Current Story:') {
+  async displayStory(message: Message, title = 'Current Story:') {
+    const story = await db.story.findUnique({
+      where: {
+        id: this.storyId
+      },
+      include: {
+        words: { orderBy: { createdAt: 'asc' } }
+      }
+    })
+
+    if (!story) {
+      return
+    }
+
+    const words = story.words.map(({ word }) => word)
+
     const embed = {
       title,
-      description: this.story.text ?? '',
+      description: words.join(' '),
       color: graype.settings.color
     }
+
     message.channel.send({ embeds: [embed] })
   }
 
+  private async initialize() {
+    const state = await db.state.findFirst()
+
+    if (state?.currentStoryId) {
+      const story = await this.getStory(state.currentStoryId)
+      this.storyId = story.id
+      this.stateId = state.id
+      this.lastAuthor = state.lastAuthorId
+      this.lastWord = state.lastWord
+    } else {
+      await db.state.deleteMany()
+      const storyId = await this.createNextStory()
+      const { id: stateId } = await db.state.create({
+        data: {
+          currentStoryId: storyId
+        }
+      })
+      this.stateId = stateId
+      this.storyId = storyId
+    }
+  }
+
+  private async addWord(word: string, message: Message) {
+    const wordToAdd = sentenceTerminators.includes(word) ? word : ` ${word}`
+    const { id: userId, username } = message.author
+
+    await db.$transaction([
+      db.author.upsert({
+        where: { id: userId },
+        create: { id: userId, username },
+        update: {}
+      }),
+      db.word.create({
+        data: {
+          word: wordToAdd,
+          storyId: this.storyId,
+          authorId: userId,
+          discordMessageId: message.id
+        }
+      }),
+      db.state.update({
+        where: { id: this.stateId },
+        data: { lastAuthorId: userId, lastWord: wordToAdd }
+      })
+    ])
+
+    this.lastAuthor = userId
+    this.lastWord = wordToAdd
+  }
+
+  private async getStory(id: string): Promise<Story> {
+    const story = await db.story.findUnique({
+      where: { id },
+      include: { words: true }
+    })
+    return story as Story
+  }
+
+  private async createNextStory(): Promise<string> {
+    const { id: storyId } = await db.story.create({
+      data: {}
+    })
+    return storyId
+  }
+
+  private async deleteCurrentStory() {
+    await db.story.delete({
+      where: { id: this.storyId }
+    })
+  }
   private async validate(message: Message) {
     const isValidWord = await this.validateWord(message)
     if (!isValidWord) {
@@ -104,8 +197,7 @@ class StoryService {
       }
     }
 
-    const [lastWord] = this.story.text.split(' ').slice(-1)
-    if (input === lastWord) {
+    if (input === this.lastWord) {
       this.sendErrorMessage(message, "You can't repeat the same word")
       return false
     }
@@ -130,98 +222,6 @@ class StoryService {
     const reply = await message.channel.send(error)
     await delay()
     await reply.delete()
-  }
-
-  private async addWord(word: string, author: User) {
-    if (!this.isInitialized) {
-      return
-    }
-
-    if (sentenceTerminators.includes(word)) {
-      this.story.text += word
-    } else {
-      this.story.text += ` ${word}`
-    }
-
-    const { id: userId, username } = author
-    this.lastAuthor = userId
-
-    await db.story.update({
-      where: { id: this.story.id },
-      data: { text: this.story.text }
-    })
-
-    await db.state.update({
-      where: { id: this.stateId },
-      data: { lastAuthorId: userId }
-    })
-
-    try {
-      await db.author.findFirstOrThrow({
-        where: {
-          userId,
-          storyId: this.story.id
-        }
-      })
-    } catch (error) {
-      await db.author.create({
-        data: {
-          userId,
-          username,
-          storyId: this.story.id
-        }
-      })
-    }
-  }
-
-  private async initialize() {
-    const state = await db.state.findFirst()
-
-    if (state) {
-      this.story = await this.getStory(state.currentStoryId)
-      this.stateId = state.id
-    } else {
-      this.story = await this.createNextStory()
-      const { id } = await db.state.create({
-        data: {
-          currentStoryId: this.story.id,
-          lastAuthorId: ''
-        }
-      })
-      this.stateId = id
-    }
-
-    this.isInitialized = true
-  }
-
-  private async getStory(id: string): Promise<Story> {
-    const story = await db.story.findUnique({ where: { id } })
-    return story as Story
-  }
-
-  private async createNextStory(): Promise<Story> {
-    const { id, text } = await db.story.create({
-      data: { text: '' }
-    })
-
-    if (this.stateId) {
-      await db.state.update({
-        where: {
-          id: this.stateId
-        },
-        data: {
-          currentStoryId: id
-        }
-      })
-    }
-
-    return { id, text }
-  }
-
-  private async deleteCurrentStory() {
-    await db.story.deleteMany({
-      where: { id: this.story.id }
-    })
   }
 }
 

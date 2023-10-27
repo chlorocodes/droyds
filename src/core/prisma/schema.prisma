@@ -7,53 +7,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Writing Server 
-
-model WritingState {
+model State {
   id             String @id @default(uuid()) @map("id")
-  currentStoryId String @map("current_story_id")
-  lastAuthorId   String @map("last_author_id")
+  currentStoryId String @default("") @map("current_story_id")
+  lastAuthorId   String @default("") @map("last_author_id")
+  lastWord       String @default("") @map("last_word")
 
   @@map("state")
 }
 
 model Story {
-  id         String  @id @default(uuid()) @map("id")
-  text       String  @map("text")
-  isComplete Boolean @default(false) @map("is_complete")
+  id         String   @id @default(uuid()) @map("id")
+  name       String   @default("") @map("name")
+  isComplete Boolean  @default(false) @map("is_complete")
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  authors Author[]
+  words Word[]
 
   @@map("stories")
 }
 
 model Author {
-  id       String @id @default(uuid()) @map("id")
-  userId   String @map("userId")
-  username String @map("username")
-  storyId  String @map("story_id")
+  id       String @id @default("1152770278582124685") @map("id")
+  username String @default("Graype") @map("username")
 
-  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  words Word[]
 
   @@map("authors")
 }
 
-// -----------------------------------------------------------------------------------------------------
+model Word {
+  id               String   @id @default(uuid()) @map("id")
+  word             String   @map("word")
+  storyId          String   @map("story_id")
+  authorId         String   @map("author_id")
+  discordMessageId String   @map("discord_message_id")
+  createdAt        DateTime @default(now()) @map("created_at")
 
-// Hot Springs Server 
+  author Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  story  Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
-model CultState {
-  id String @id @default(uuid()) @map("id")
-}
-
-model Fanfic {
-  id             String @id @default(uuid()) @map("id")
-  currentStoryId String @map("current_story_id")
-  lastAuthorId   String @map("last_author_id")
-}
-
-model Block {
-  id         String  @id @default(uuid()) @map("id")
-  text       String  @map("text")
-  isComplete Boolean @default(false) @map("is_complete")
+  @@map("words")
 }

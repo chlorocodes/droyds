@@ -3,6 +3,7 @@ import { Bot } from '../core/bot'
 import { avatar, compliment, fact, help, joke, translate } from './commands'
 import { apiNinjasService } from '../core/services/api-ninjas'
 import { image, imageCommands } from '../core/commands/image'
+import { send } from './commands/send'
 
 export class Lyme extends Bot {
   constructor() {
@@ -36,7 +37,8 @@ export class Lyme extends Bot {
       '!avatar',
       '!av',
       '!joke',
-      '!jokes'
+      '!jokes',
+      '!send'
     ])
 
     if (validCommands.has(commandName)) {
@@ -49,6 +51,10 @@ export class Lyme extends Bot {
 
     if (commandName.startsWith('!translate')) {
       return translate(message, args)
+    }
+
+    if (commandName.startsWith('!send')) {
+      return send(message, this.client)
     }
 
     if (commandName === '!fact') {

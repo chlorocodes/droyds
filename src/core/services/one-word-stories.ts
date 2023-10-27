@@ -4,14 +4,14 @@ import { db } from './database'
 import { graype } from '../../graype/graype'
 import { delay } from '../utils/delay'
 
-const articles = ['!', '?', ':', ';', '-', '–', '.']
+const articles = ['!', '?', ':', ';', '-', '–', '.', ',']
 const sentenceTerminators = ['.', '?', '!']
 
 interface Story extends PrismaStory {
   words: Word[]
 }
 
-class StoryService {
+class OneWordStoryService {
   stateId = ''
   storyId = ''
   lastAuthor = ''
@@ -29,7 +29,7 @@ class StoryService {
     }
 
     const word = message.content
-    this.addWord(word, message)
+    await this.addWord(word, message)
     message.react('✅')
 
     const lastCharacter = word.slice(-1)
@@ -125,7 +125,11 @@ class StoryService {
     await db.$transaction([
       db.author.upsert({
         where: { id: userId },
-        create: { id: userId, username },
+        create: {
+          id: userId,
+          username,
+          avatar: message.author.displayAvatarURL()
+        },
         update: {}
       }),
       db.word.create({
@@ -185,12 +189,14 @@ class StoryService {
     const words = input.split(' ')
 
     if (words.length > 2) {
+      console.log('waaaaaaaaaaaaaaaaaat')
       this.sendErrorMessage(message, 'Please send 1 word at a time')
       return false
     }
 
     if (words.length === 2) {
       const [first, second] = words
+      console.log({ first, second })
       if (!articles.includes(first) && !articles.includes(second)) {
         this.sendErrorMessage(message, 'Please send 1 word at a time')
         return false
@@ -225,4 +231,4 @@ class StoryService {
   }
 }
 
-export const stories = new StoryService()
+export const oneWordStories = new OneWordStoryService()

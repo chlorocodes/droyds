@@ -17,7 +17,9 @@ CREATE TABLE "stories" (
 -- CreateTable
 CREATE TABLE "authors" (
     "id" TEXT NOT NULL PRIMARY KEY DEFAULT '1152770278582124685',
-    "username" TEXT NOT NULL DEFAULT 'Graype'
+    "username" TEXT NOT NULL DEFAULT 'Graype',
+    "avatar" TEXT NOT NULL,
+    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable

@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 import { Bot } from '../core/bot'
-import { stories } from '../core/services/stories'
+import { oneWordStories } from '../core/services/one-word-stories'
 
 export class Graype extends Bot {
   isOn = true
@@ -38,7 +38,7 @@ export class Graype extends Bot {
     }
 
     if (this.isOn) {
-      stories.onWord(message)
+      oneWordStories.onWord(message)
     }
   }
 
@@ -50,15 +50,15 @@ export class Graype extends Bot {
     }
 
     if (commandName === '!story') {
-      return stories.displayStory(message)
+      return oneWordStories.displayStory(message)
     }
 
     if (commandName === '!end') {
-      return stories.end(message, args.join(' '))
+      return oneWordStories.end(message, args.join(' '))
     }
 
     if (commandName === '!reset') {
-      return stories.reset(message)
+      return oneWordStories.reset(message)
     }
 
     const isAdmin =

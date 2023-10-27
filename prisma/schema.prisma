@@ -28,8 +28,10 @@ model Story {
 }
 
 model Author {
-  id       String @id @default("1152770278582124685") @map("id")
-  username String @default("Graype") @map("username")
+  id        String   @id @default("1152770278582124685") @map("id")
+  username  String   @default("Graype") @map("username")
+  avatar    String   @map("avatar")
+  createdAt DateTime @default(now()) @map("created_at")
 
   words Word[]
 

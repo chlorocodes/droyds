@@ -6,7 +6,6 @@ export function splitMessage(
   text: string,
   { maxLength = 2_000, char = '\n', prepend = '', append = '' } = {}
 ) {
-  text = verifyString(text)
   if (text.length <= maxLength) return [text]
   let splitText: Array<string> = [text]
   if (Array.isArray(char)) {
@@ -40,15 +39,4 @@ export function splitMessage(
     msg += (msg && msg !== prepend ? char : '') + chunk
   }
   return messages.concat(msg).filter((m) => m)
-}
-
-function verifyString(
-  data: string,
-  error = Error,
-  errorMessage = `Expected a string, got ${data} instead.`,
-  allowEmpty = true
-) {
-  if (typeof data !== 'string') throw new error(errorMessage)
-  if (!allowEmpty && data.length === 0) throw new error(errorMessage)
-  return data
 }

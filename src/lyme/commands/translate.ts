@@ -77,9 +77,7 @@ async function getMessages(
   const messages = [...collection.values()].reverse()
   const untranslatedMessages = messages.filter(
     (message) =>
-      !message.author.bot &&
-      message.content.trim() !== '' &&
-      !message.content.startsWith('!translate')
+      message.content.trim() !== '' && !message.content.startsWith('!translate')
   )
 
   return untranslatedMessages

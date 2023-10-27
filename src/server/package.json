@@ -1,0 +1,29 @@
+{
+  "name": "@droyds/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@droyds/core": "1.0.0",
+    "@google-cloud/translate": "^7.2.2",
+    "@prisma/client": "^5.3.1",
+    "@remindd/cli": "^1.6.2",
+    "@strdr4605/mockingcase": "^1.10.5",
+    "cheerio": "^1.0.0-rc.12",
+    "discord.js": "^14.12.1",
+    "dotenv": "^16.3.1",
+    "fastify": "^4.18.0",
+    "forever": "^4.0.3",
+    "openai": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.32",
+    "@types/node": "^20.6.2",
+    "eslint": "^8.43.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^2.8.8",
+    "prisma": "^5.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

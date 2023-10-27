@@ -16,7 +16,7 @@ model State {
   @@map("state")
 }
 
-model Story {
+model OneWordStory {
   id         String   @id @default(uuid()) @map("id")
   name       String   @default("") @map("name")
   isComplete Boolean  @default(false) @map("is_complete")
@@ -28,8 +28,10 @@ model Story {
 }
 
 model Author {
-  id       String @id @default("1152770278582124685") @map("id")
-  username String @default("Graype") @map("username")
+  id        String   @id @default("1152770278582124685") @map("id")
+  username  String   @default("Graype") @map("username")
+  avatar    String   @map("avatar")
+  createdAt DateTime @default(now()) @map("created_at")
 
   words Word[]
 
@@ -44,8 +46,8 @@ model Word {
   discordMessageId String   @map("discord_message_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
-  author Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  story  Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  author Author       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  story  OneWordStory @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
   @@map("words")
 }

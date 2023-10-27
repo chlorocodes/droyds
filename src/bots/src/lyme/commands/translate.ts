@@ -1,10 +1,10 @@
+import { googleService } from '@droyds/core/services'
 import {
   Message,
   APIEmbed,
   GuildTextBasedChannel,
   TextBasedChannel
 } from 'discord.js'
-import { googleService } from '../../../core/services/google'
 
 type TranslatedMessage = Pick<Message, 'author' | 'content'>
 

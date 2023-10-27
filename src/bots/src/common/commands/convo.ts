@@ -1,5 +1,5 @@
 import { APIEmbed, Message } from 'discord.js'
-import { ChatCompletionRequestMessage } from 'openai'
+import type { ChatCompletionRequestMessage } from 'openai'
 import { Bot } from '../bot.js'
 
 export async function convo(

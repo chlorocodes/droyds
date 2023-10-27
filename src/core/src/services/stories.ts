@@ -52,7 +52,7 @@ class OneWordStoryService {
         where: { id: this.storyId },
         data: { isComplete: true, name: storyName }
       }),
-      db.state.update({
+      db.writingState.update({
         where: { id: this.stateId },
         data: {
           currentStoryId: nextStoryId,
@@ -96,7 +96,7 @@ class OneWordStoryService {
   }
 
   private async initialize() {
-    const state = await db.state.findFirst()
+    const state = await db.writingState.findFirst()
 
     if (state?.currentStoryId) {
       const story = await this.getStory(state.currentStoryId)
@@ -105,9 +105,9 @@ class OneWordStoryService {
       this.lastAuthor = state.lastAuthorId
       this.lastWord = state.lastWord
     } else {
-      await db.state.deleteMany()
+      await db.writingState.deleteMany()
       const storyId = await this.createNextStory()
-      const { id: stateId } = await db.state.create({
+      const { id: stateId } = await db.writingState.create({
         data: {
           currentStoryId: storyId
         }
@@ -139,7 +139,7 @@ class OneWordStoryService {
           discordMessageId: message.id
         }
       }),
-      db.state.update({
+      db.writingState.update({
         where: { id: this.stateId },
         data: { lastAuthorId: userId, lastWord: wordToAdd }
       })

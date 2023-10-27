@@ -2,10 +2,15 @@
   "name": "@droyds/monorepo",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "src/**/*"
-  ],
   "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
     "migrate": "npm run migrate --workspace=@droyds/core"
-  }
+  },
+  "workspaces": [
+    "src/core",
+    "src/bots",
+    "src/server",
+    "src/website"
+  ]
 }

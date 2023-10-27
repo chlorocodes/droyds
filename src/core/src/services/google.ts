@@ -1,5 +1,6 @@
 import { join } from 'node:path'
 import { v2 } from '@google-cloud/translate'
+import { __dirname } from '../utils/__dirname.js'
 
 class GoogleService {
   private translator = new v2.Translate({

@@ -1,6 +1,6 @@
+import { apiNinjasService } from '@droyds/core/services'
 import { Message } from 'discord.js'
-import { apiNinjasService } from '../../../core/services/api-ninjas'
-import { lyme } from '../lyme'
+import { lyme } from '../lyme.js'
 
 export async function fact(message: Message) {
   try {

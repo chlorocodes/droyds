@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model State {
+model WritingState {
   id             String @id @default(uuid()) @map("id")
   currentStoryId String @default("") @map("current_story_id")
   lastAuthorId   String @default("") @map("last_author_id")

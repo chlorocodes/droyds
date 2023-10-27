@@ -4,7 +4,7 @@ set -e
 set -x
 
 nvmScript="~/.nvm/nvm.sh"
-serverRoot="~/cytrus"
+serverRoot="~/droyds"
 user=$DROYD_USER
 host=$DROYD_HOST
 

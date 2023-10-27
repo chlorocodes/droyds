@@ -1,4 +1,5 @@
 import { join } from 'node:path'
+import { __dirname } from '@droyds/core/utils'
 import { Message } from 'discord.js'
 
 const assetsPath = join(__dirname, '..', 'assets')

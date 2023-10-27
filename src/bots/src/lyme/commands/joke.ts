@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { jokes } from '../../../core/services/jokes'
+import { jokes } from '@droyds/core/services'
 
 export async function joke(message: Message) {
   const [joke] = await jokes.getJokes(1)

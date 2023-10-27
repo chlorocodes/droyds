@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { apiNinjasService } from '../../core/services/api-ninjas'
+import { apiNinjasService } from '../../../core/services/api-ninjas'
 import { lyme } from '../lyme'
 
 export async function fact(message: Message) {

@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { Bot } from '../core/bot'
+import { Bot } from '../../core/bot'
 import { abuse, mock, pickup, roast, snitch } from './commands'
 
 export class Lemyn extends Bot {

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js'
-import { Bot } from '../core/bot'
+import { Bot } from '../../core/bot'
 import { translate } from './commands/translate'
-import { image, imageCommands } from '../core/commands/image'
+import { image, imageCommands } from '../../core/commands/image'
 
 class Shibai extends Bot {
   constructor() {

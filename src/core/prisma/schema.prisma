@@ -7,7 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model State {
+// Writing Server 
+
+model WritingState {
   id             String @id @default(uuid()) @map("id")
   currentStoryId String @map("current_story_id")
   lastAuthorId   String @map("last_author_id")
@@ -34,4 +36,24 @@ model Author {
   story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
   @@map("authors")
+}
+
+// -----------------------------------------------------------------------------------------------------
+
+// Hot Springs Server 
+
+model CultState {
+  id String @id @default(uuid()) @map("id")
+}
+
+model Fanfic {
+  id             String @id @default(uuid()) @map("id")
+  currentStoryId String @map("current_story_id")
+  lastAuthorId   String @map("last_author_id")
+}
+
+model Block {
+  id         String  @id @default(uuid()) @map("id")
+  text       String  @map("text")
+  isComplete Boolean @default(false) @map("is_complete")
 }

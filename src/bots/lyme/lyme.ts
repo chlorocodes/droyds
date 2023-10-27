@@ -1,8 +1,8 @@
 import { Message, TextChannel } from 'discord.js'
-import { Bot } from '../core/bot'
+import { Bot } from '../../core/bot'
 import { avatar, compliment, fact, help, joke, translate } from './commands'
-import { apiNinjasService } from '../core/services/api-ninjas'
-import { image, imageCommands } from '../core/commands/image'
+import { apiNinjasService } from '../../core/services/api-ninjas'
+import { image, imageCommands } from '../../core/commands/image'
 
 export class Lyme extends Bot {
   constructor() {

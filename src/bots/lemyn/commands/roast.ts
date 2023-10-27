@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { roaster } from '../../core/services/roasts'
+import { roaster } from '../../../core/services/roasts'
 import { lemyn } from '../lemyn'
 
 const greetings = ['Yo', 'Hey', 'Sup']

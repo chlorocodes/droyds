@@ -1,4 +1,4 @@
-import { Bot } from '../core/bot'
+import { Bot } from '../../core/bot'
 
 class Isshiki extends Bot {
   constructor() {

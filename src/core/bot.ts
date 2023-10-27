@@ -162,6 +162,8 @@ export class Bot {
     const [commandName, ...args] = message.cleanContent.trim().split(' ')
     const validCommands = new Set(['!convo', '!clearConvo'])
 
+    const isAdmin = message.author.id === (process.env.CHLORO_USER_ID as string)
+
     if (
       validCommands.has(commandName) &&
       args.join(' ').includes(this.settings.name)
@@ -176,15 +178,17 @@ export class Bot {
       return convo(message, this.getConversation(), this.settings)
     }
 
-    if (
-      commandName.toLowerCase().startsWith('!clearconvo') &&
-      args[0].toLowerCase().includes(this.settings.name.toLowerCase())
-    ) {
-      return clearConvo(
-        message,
-        this.clearConversation.bind(this),
-        this.settings
-      )
+    if (isAdmin) {
+      if (
+        commandName.toLowerCase().startsWith('!clearconvo') &&
+        args[0].toLowerCase().includes(this.settings.name.toLowerCase())
+      ) {
+        return clearConvo(
+          message,
+          this.clearConversation.bind(this),
+          this.settings
+        )
+      }
     }
   }
 }

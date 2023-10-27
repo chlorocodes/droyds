@@ -8,6 +8,7 @@ import { urashiki } from './otsutsuki/urashiki'
 import { isshiki } from './otsutsuki/isshiki'
 import { kaguya } from './otsutsuki/kaguya'
 import { kinshiki } from './otsutsuki/kinshiki'
+import { orynge } from './orynge/orynge'
 
 const bots = [
   lemyn,
@@ -18,7 +19,8 @@ const bots = [
   kaguya,
   momoshiki,
   kinshiki,
-  urashiki
+  urashiki,
+  orynge
 ]
 
 bots.forEach((bot) => {

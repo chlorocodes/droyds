@@ -1,7 +1,8 @@
-import { Client, GatewayIntentBits, Message } from 'discord.js'
+import { Client, GatewayIntentBits, Message, Utils } from 'discord.js'
 import { ChatService } from './services/openai'
 import { convo } from './commands/convo'
 import { clearConvo } from './commands/clearConvo'
+import { splitMessage } from './utils/split'
 
 interface Options {
   token: string
@@ -136,8 +137,11 @@ export class Bot {
     const user = message.author.username
     const question = message.cleanContent
     const response = await this.chat.ask({ user, question })
+    const messages = splitMessage(response ?? '')
 
-    message.reply(response ?? 'Unabled to generate a response')
+    messages.forEach((msg) => {
+      message.reply(msg ?? 'Unabled to generate a response')
+    })
   }
 
   protected onAdminCommand(message: Message) {

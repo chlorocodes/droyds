@@ -1,4 +1,5 @@
 import { join } from 'node:path'
+import { __dirname } from '@droyds/core/utils'
 import server from 'fastify'
 import fastifyCookie from '@fastify/cookie'
 import fastifySession from '@fastify/session'
@@ -15,7 +16,7 @@ export const app = server({
 
 app.register(fastifyCookie)
 app.register(fastifySession, {
-  secret: process.env.SESSION_SECRET as string,
+  secret: process.env.SESSION_SECRET as string ?? 's'.repeat(32),
   cookie: { secure: 'auto', maxAge: ONE_MONTH },
   store: new PrismaStore()
 })

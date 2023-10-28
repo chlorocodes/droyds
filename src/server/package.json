@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon --watch './**/*.ts' --exec 'node --experimental-specifier-resolution=node --loader ts-node/esm' src/index.ts",
+    "dev": "nodemon --ext \"ts,json\" --exec \"ts-node-esm --files src/index.ts\"",
+    "start": "forever start dist/index.js",
+    "stop": "forever stop dist/index.js",
     "restart": "forever restart dist/index.js"
   },
   "dependencies": {
@@ -28,6 +30,7 @@
     "prettier": "^2.8.8",
     "prisma": "^5.3.1",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2"
   }
 }

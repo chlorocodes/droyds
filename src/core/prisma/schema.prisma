@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Auth
+
+model Session {
+  id       String  @id @map("id")
+  userId   String? @map("user_id")
+  username String? @map("username")
+
+  @@map("sessions")
+}
+
+// Writing Server
+
 model WritingState {
   id             String @id @default(uuid()) @map("id")
   currentStoryId String @default("") @map("current_story_id")

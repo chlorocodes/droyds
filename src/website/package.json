@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "clean": "rm -rf dist",
     "lint": "eslint .",
     "format": "prettier \"src/**/*\" --write",
     "preview": "vite preview"

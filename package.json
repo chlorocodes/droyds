@@ -13,8 +13,8 @@
     "dev:website": "wait-on tcp:3000 && npm run dev --workspace=@droyds/website",
     "dev:server": "npm run dev --workspace=@droyds/server",
     "dev:db": "npm run studio --workspace=@droyds/server -p 5000",
-    "build": "npm run build --workspaces --if-present",
-    "clean": "npm run clean --workspaces --if-present",
+    "build": "npm run build --workspaces",
+    "clean": "npm run clean --workspaces",
     "lint": "npm run lint --workspaces",
     "format": "npm run format --workspaces",
     "migrate": "npm run migrate --workspace=@droyds/core"

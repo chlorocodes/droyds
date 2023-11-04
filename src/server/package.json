@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf dist",
     "dev": "nodemon --ext \"ts,json\" --exec \"ts-node-esm --files src/index.ts\"",
     "start": "forever start dist/index.js",
     "stop": "forever stop dist/index.js",

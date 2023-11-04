@@ -16,7 +16,7 @@ export const app = server({
 
 app.register(fastifyCookie)
 app.register(fastifySession, {
-  secret: process.env.SESSION_SECRET as string ?? 's'.repeat(32),
+  secret: (process.env.SESSION_SECRET as string) ?? 's'.repeat(32),
   cookie: { secure: 'auto', maxAge: ONE_MONTH },
   store: new PrismaStore()
 })

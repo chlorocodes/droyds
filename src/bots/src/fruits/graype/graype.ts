@@ -43,7 +43,7 @@ export class Graype extends Bot {
   }
 
   protected override async onCommand(message: Message) {
-    const [commandName, ...args] = message.cleanContent.trim().split(' ')
+    const [commandName] = message.cleanContent.trim().split(' ')
 
     message.channel.sendTyping()
 

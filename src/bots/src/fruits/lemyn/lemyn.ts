@@ -21,7 +21,7 @@ export class Lemyn extends Bot {
   onCommand(message: Message) {
     super.onCommand(message)
 
-    const [commandName, ...args] = message.cleanContent.trim().split(' ')
+    const [commandName] = message.cleanContent.trim().split(' ')
 
     const validCommands = new Set([
       '!abuse',

@@ -20,7 +20,9 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "lint": "eslint .",
+    "format": "prettier \"src/**/*\" --write"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.2.2",

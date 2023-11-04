@@ -9,6 +9,8 @@
     "start": "forever start dist/index.js",
     "stop": "forever stop dist/index.js",
     "restart": "forever restart dist/index.js",
+    "lint": "eslint .",
+    "format": "prettier \"src/**/*\" --write",
     "migrate": "npm run migrate:dev",
     "migrate:dev": "prisma migrate dev --schema ../core/prisma/schema.prisma",
     "migrate:deploy": "prisma migrate deploy --schema ../core/prisma/schema.prisma",

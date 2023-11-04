@@ -13,7 +13,9 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "dev": "node --loader ts-node/esm ./src/index.ts",
-    "compile": "tsc --noEmit"
+    "compile": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier \"src/**/*\" --write"
   },
   "dependencies": {
     "@droyds/core": "1.0.0",

@@ -15,7 +15,7 @@
     "migrate": "npm run migrate:dev",
     "migrate:dev": "prisma migrate dev --schema ../core/prisma/schema.prisma",
     "migrate:deploy": "prisma migrate deploy --schema ../core/prisma/schema.prisma",
-    "studio": "prisma studio --schema ../core/prisma/schema.prisma"
+    "studio": "prisma studio --schema ../core/prisma/schema.prisma -p 5000"
   },
   "dependencies": {
     "@droyds/bots": "1.0.0",

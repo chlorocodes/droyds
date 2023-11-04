@@ -13,6 +13,10 @@ export const theme = extendTheme({
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh'
+      },
+      body: {
+        bg: '#0D0E0F',
+        fontFamily: 'Comfortaa'
       }
     }
   }

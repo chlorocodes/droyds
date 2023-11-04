@@ -7,15 +7,15 @@ import { BotsPage } from '../bots'
 export function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Layout>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Layout>
           <Routes>
             <Route index element={<BotsPage />} />
             <Route path="/bots" element={<BotsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </BrowserRouter>
-      </Layout>
+        </Layout>
+      </BrowserRouter>
     </ChakraProvider>
   )
 }

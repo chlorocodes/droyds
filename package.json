@@ -2,15 +2,23 @@
   "name": "@droyds/monorepo",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "clean": "npm run clean --workspaces --if-present",
-    "migrate": "npm run migrate --workspace=@droyds/core"
-  },
   "workspaces": [
     "src/core",
     "src/bots",
     "src/server",
     "src/website"
-  ]
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"Website,Server,Prisma Studio\" -c \"blue.bold,green.bold,magenta.bold\" \"npm:dev:website\" \"npm:dev:server\" \"npm:dev:db\"",
+    "dev:website": "wait-on tcp:3000 && npm run dev --workspace=@droyds/website",
+    "dev:server": "npm run dev --workspace=@droyds/server",
+    "dev:db": "npm run studio --workspace=@droyds/server -p 5000",
+    "build": "npm run build --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
+    "migrate": "npm run migrate --workspace=@droyds/core"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.1.0"
+  }
 }

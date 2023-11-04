@@ -1,6 +1,6 @@
 import { Bot } from '../common/bot.js'
 
-class Isshiki extends Bot {
+export class Isshiki extends Bot {
   constructor() {
     super({
       token: process.env.ISSHIKI_TOKEN as string,
@@ -16,5 +16,3 @@ class Isshiki extends Bot {
     })
   }
 }
-
-export const isshiki = new Isshiki()

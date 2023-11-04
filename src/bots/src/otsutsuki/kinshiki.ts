@@ -1,6 +1,6 @@
 import { Bot } from '../common/bot.js'
 
-class Kinshiki extends Bot {
+export class Kinshiki extends Bot {
   constructor() {
     super({
       token: process.env.KINSHIKI_TOKEN as string,
@@ -16,5 +16,3 @@ class Kinshiki extends Bot {
     })
   }
 }
-
-export const kinshiki = new Kinshiki()

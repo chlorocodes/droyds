@@ -1,6 +1,6 @@
 import { Bot } from '../common/bot.js'
 
-class Momoshiki extends Bot {
+export class Momoshiki extends Bot {
   constructor() {
     super({
       token: process.env.MOMOSHIKI_TOKEN as string,
@@ -16,5 +16,3 @@ class Momoshiki extends Bot {
     })
   }
 }
-
-export const momoshiki = new Momoshiki()

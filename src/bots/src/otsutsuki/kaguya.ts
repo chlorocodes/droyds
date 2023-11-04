@@ -1,6 +1,6 @@
 import { Bot } from '../common/bot.js'
 
-class Kaguya extends Bot {
+export class Kaguya extends Bot {
   constructor() {
     super({
       token: process.env.KAGUYA_TOKEN as string,
@@ -16,5 +16,3 @@ class Kaguya extends Bot {
     })
   }
 }
-
-export const kaguya = new Kaguya()

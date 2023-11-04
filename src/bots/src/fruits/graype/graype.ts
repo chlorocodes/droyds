@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { Bot } from '../common/bot.js'
+import { Bot } from '../../common/bot.js'
 import { oneWordStories } from '@droyds/core/services'
 
 export class Graype extends Bot {
@@ -76,5 +76,3 @@ export class Graype extends Bot {
     }
   }
 }
-
-export const graype = new Graype()

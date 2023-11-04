@@ -1,4 +1,4 @@
-import { Bot } from '../common/bot.js'
+import { Bot } from '../../common/bot.js'
 
 export class Orynge extends Bot {
   constructor() {
@@ -15,5 +15,3 @@ export class Orynge extends Bot {
     })
   }
 }
-
-export const orynge = new Orynge()

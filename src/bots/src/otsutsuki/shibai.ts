@@ -3,7 +3,7 @@ import { Bot } from '../common/bot.js'
 import { translate } from './commands/translate.js'
 import { image, imageCommands } from '../common/commands/image.js'
 
-class Shibai extends Bot {
+export class Shibai extends Bot {
   constructor() {
     super({
       token: process.env.SHIBAI_TOKEN as string,
@@ -44,5 +44,3 @@ class Shibai extends Bot {
     }
   }
 }
-
-export const shibai = new Shibai()

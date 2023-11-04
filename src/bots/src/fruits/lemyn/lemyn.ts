@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { Bot } from '../common/bot.js'
+import { Bot } from '../../common/bot.js'
 import { abuse, mock, pickup, roast, snitch } from './commands/index.js'
 
 export class Lemyn extends Bot {
@@ -56,5 +56,3 @@ export class Lemyn extends Bot {
     }
   }
 }
-
-export const lemyn = new Lemyn()

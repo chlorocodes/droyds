@@ -8,7 +8,11 @@
     "dev": "nodemon --ext \"ts,json\" --exec \"ts-node-esm --files src/index.ts\"",
     "start": "forever start dist/index.js",
     "stop": "forever stop dist/index.js",
-    "restart": "forever restart dist/index.js"
+    "restart": "forever restart dist/index.js",
+    "migrate": "npm run migrate:dev",
+    "migrate:dev": "prisma migrate dev --schema ../core/prisma/schema.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema ../core/prisma/schema.prisma",
+    "studio": "prisma studio --schema ../core/prisma/schema.prisma"
   },
   "dependencies": {
     "@droyds/bots": "1.0.0",

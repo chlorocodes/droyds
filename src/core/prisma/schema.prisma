@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Bots 
+
+model Droyd {
+  id    String @id @default(uuid()) @map("id")
+  name  String @map("name")
+  color String @map("color")
+}
+
 // Auth
 
 model Session {

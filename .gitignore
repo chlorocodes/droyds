@@ -8,3 +8,4 @@ google-keys.json
 .DS_Store
 *.db
 *.db-journal
+vite-env.d.ts

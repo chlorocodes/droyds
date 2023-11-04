@@ -6,7 +6,7 @@ import fastifySession from '@fastify/session'
 import serveStatic from '@fastify/static'
 import { PrismaStore } from './plugins/session-store.js'
 import { authRoutes } from './routes/auth.js'
-import { botRoutes } from './routes/bot.js'
+import { oneWordStoryRoutes } from './routes/one-word-story.js'
 
 const ONE_MONTH = 1000 * 60 * 60 * 24 * 30
 
@@ -22,4 +22,4 @@ app.register(fastifySession, {
 })
 app.register(serveStatic, { root: join(__dirname, '..') })
 app.register(authRoutes, { prefix: '/api/auth' })
-app.register(botRoutes, { prefix: '/api/bot' })
+app.register(oneWordStoryRoutes, { prefix: '/api/ows' })

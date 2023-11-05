@@ -14,6 +14,7 @@ interface Options {
     color: number
     roleId: string
     channelId?: string
+    debugChannelId?: string
   }
 }
 
@@ -100,11 +101,10 @@ export class Bot {
     const isReplyToBot = message.mentions.repliedUser?.id === this.settings.id
     const isBotMention = message.mentions.users.get(this.settings.id)
     const isRoleMention = message.mentions.roles.get(this.settings.roleId)
+    const isDebugChannel = message.channel.id === this.settings.debugChannelId
+    const isTalkingToBot = isReplyToBot || isBotMention || isRoleMention
 
-    if (
-      this.settings.isChatEnabled &&
-      (isReplyToBot || isBotMention || isRoleMention)
-    ) {
+    if (isDebugChannel || (this.settings.isChatEnabled && isTalkingToBot)) {
       return this.onChat(message)
     }
   }

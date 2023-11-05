@@ -38,8 +38,18 @@ class OneWordStoryService {
   }
 
   async reset(message: Message) {
-    await this.deleteCurrentStory()
-    this.storyId = await this.createNextStory()
+    await db.$transaction([
+      db.word.deleteMany({
+        where: { storyId: this.storyId }
+      }),
+      db.writingState.update({
+        where: { id: this.stateId },
+        data: {
+          lastAuthorId: '',
+          lastWord: ''
+        }
+      })
+    ])
     this.lastAuthor = ''
     this.lastWord = ''
     message.reply('Story has been reset')

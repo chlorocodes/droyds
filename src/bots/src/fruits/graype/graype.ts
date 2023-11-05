@@ -15,7 +15,8 @@ export class Graype extends Bot {
         color: 0x9266cc,
         isChatEnabled: false,
         id: process.env.GRAYPE_USER_ID as string,
-        roleId: process.env.GRAYPE_ROLE_ID as string
+        roleId: process.env.GRAYPE_ROLE_ID as string,
+        debugChannelId: process.env.DEBUG_GRAYPE_CHANNEL_ID as string
       }
     })
   }
@@ -45,23 +46,15 @@ export class Graype extends Bot {
   protected override async onCommand(message: Message) {
     const [commandName] = message.cleanContent.trim().split(' ')
 
+    const isAdmin =
+      message.author.id === process.env.CHLORO_USER_ID ||
+      this.adminRoles.some((role) => message.member?.roles.cache.has(role))
+
     message.channel.sendTyping()
 
     if (commandName === '!story') {
       return oneWordStories.displayStory(message)
     }
-
-    if (commandName === '!end') {
-      return oneWordStories.end(message)
-    }
-
-    if (commandName === '!reset') {
-      return oneWordStories.reset(message)
-    }
-
-    const isAdmin =
-      message.author.id === process.env.CHLORO_USER_ID ||
-      this.adminRoles.some((role) => message.member?.roles.cache.has(role))
 
     if (isAdmin) {
       if (commandName === '!on') {
@@ -72,6 +65,14 @@ export class Graype extends Bot {
       if (commandName === '!off') {
         this.isOn = false
         return message.reply(`${this.settings.name} has been disabled`)
+      }
+
+      if (commandName === '!end') {
+        return oneWordStories.end(message)
+      }
+
+      if (commandName === '!reset') {
+        return oneWordStories.reset(message)
       }
     }
   }

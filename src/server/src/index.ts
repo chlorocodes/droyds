@@ -1,13 +1,14 @@
 import {
+  Mynt,
+  Lyme,
+  Lemyn,
+  Orynge,
   Graype,
+  Shibai,
   Isshiki,
   Kaguya,
   Kinshiki,
-  Lemyn,
-  Lyme,
   Momoshiki,
-  Orynge,
-  Shibai,
   Urashiki
 } from '@droyds/bots'
 import dotenv from 'dotenv'
@@ -20,6 +21,7 @@ const host = '::'
 const port = Number(process.env.PORT) ?? (isProd ? 80 : 3000)
 
 const bots = [
+  new Mynt(),
   new Lyme(),
   new Lemyn(),
   new Graype(),

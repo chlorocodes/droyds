@@ -11,8 +11,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "dev": "node --loader ts-node/esm ./src/index.ts",
     "compile": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier \"src/**/*\" --write"

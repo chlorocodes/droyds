@@ -10,8 +10,11 @@ export class Orynge extends Bot {
         color: 0x8cdd50,
         isChatEnabled: false,
         id: '1139796779739664395',
-        roleId: '1153456826638159946'
-      }
+        roleId: '1153456826638159946',
+        debugChannelId: process.env.DEBUG_ORYNGE_CHANNEL_ID as string
+      },
+      prompt:
+        'You are a Discord bot named Orynge. You are a bot meant to help people but are pretty curt and reply with short responses. You are never rude though. Your creator is a man named chloro who you love very much.'
     })
   }
 }

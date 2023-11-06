@@ -8,7 +8,7 @@ export class Mynt extends Bot {
       token: process.env.MYNT_TOKEN as string,
       settings: {
         name: 'Mynt',
-        color: 0xacde59,
+        color: 0x227414,
         isChatEnabled: false,
         id: process.env.MYNT_USER_ID as string,
         roleId: process.env.MYNT_ROLE_ID as string,

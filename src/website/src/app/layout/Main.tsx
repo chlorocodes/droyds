@@ -7,7 +7,7 @@ interface Props {
 
 export function Main({ children }: Props) {
   return (
-    <Box as="main" flex="1">
+    <Box as="main" display="flex" flex="1" margin="1rem 2rem">
       {children}
     </Box>
   )

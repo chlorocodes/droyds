@@ -1,1 +1,1 @@
-export { BotsPage } from './BotsPage'
+export { BotsPage } from './components/BotsPage'

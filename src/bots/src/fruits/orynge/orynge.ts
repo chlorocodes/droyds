@@ -7,7 +7,7 @@ export class Orynge extends Bot {
         'MTEzOTc5Njc3OTczOTY2NDM5NQ.GLNb1w.5-xduHKkJRoc33yS_tXTjvmcKeXnvRYZDCg3FU',
       settings: {
         name: 'Orynge',
-        color: 0x8cdd50,
+        color: 0xf38a24,
         isChatEnabled: false,
         id: '1139796779739664395',
         roleId: '1153456826638159946',

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { BotLogo } from './BotLogo'
 import { graype } from '../../bots/bot-settings'
 
@@ -13,7 +13,13 @@ export function GraypePage() {
 
   return (
     <Flex flex="1">
-      <Flex as="aside" flex="1">
+      <Flex
+        as="aside"
+        bg="black"
+        p="1rem 0"
+        flexDirection="column"
+        width="15rem"
+      >
         <BotLogo name={graype.name} icon={graype.icon} />
       </Flex>
     </Flex>

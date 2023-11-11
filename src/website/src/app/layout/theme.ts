@@ -19,7 +19,7 @@ export const theme = extendTheme({
         fontFamily: 'Open Sans'
       },
       'h1, h2, h3, h4, h5, h6': {
-        fontFamily: 'CircularStd-Book !important'
+        fontFamily: 'Varela Round !important'
       }
     }
   }

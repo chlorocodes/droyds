@@ -1,6 +1,16 @@
 import { db } from '@droyds/core/services'
-import { GetAllAuthorsSchema } from '../schemas/one-word-story.js'
+import {
+  GetAllAuthorsSchema,
+  GetAllStoriesSchema,
+  GetAllWordsSchema
+} from '../schemas/one-word-story.js'
 import { RouteHandler } from '../types/routes.js'
+
+export const getAllStories: RouteHandler<GetAllStoriesSchema> = async (
+  req
+) => {}
+
+export const getAllWords: RouteHandler<GetAllWordsSchema> = async (req) => {}
 
 export const getAllAuthors: RouteHandler<GetAllAuthorsSchema> = async (req) => {
   const chars = new Set(['!', '?', ':', ';', '-', '–', '.', ',', '.', '?', '!'])

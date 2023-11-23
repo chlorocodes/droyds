@@ -1,6 +1,14 @@
 import { Message, TextChannel } from 'discord.js'
 import { Bot } from '../core/bot'
-import { avatar, compliment, fact, help, joke, translate } from './commands'
+import {
+  avatar,
+  compliment,
+  fact,
+  help,
+  joke,
+  kill,
+  translate
+} from './commands'
 import { apiNinjasService } from '../core/services/api-ninjas'
 import { image, imageCommands } from '../core/commands/image'
 
@@ -69,6 +77,10 @@ export class Lyme extends Bot {
 
     if (imageCommands.has(commandName)) {
       return image(commandName, message)
+    }
+
+    if (message.cleanContent.toLowerCase().startsWith('!kill lyme')) {
+      return kill(message)
     }
   }
 

@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 import { Bot } from '../core/bot'
-import { abuse, mock, pickup, roast, snitch } from './commands'
+import { abuse, mock, pickup, roast, snitch, kill } from './commands'
 
 export class Lemyn extends Bot {
   constructor() {
@@ -53,6 +53,10 @@ export class Lemyn extends Bot {
 
     if (commandName.startsWith('!pickup')) {
       return pickup(message)
+    }
+
+    if (message.cleanContent.toLowerCase().startsWith('!kill lemyn')) {
+      return kill(message)
     }
   }
 }

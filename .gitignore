@@ -3,8 +3,10 @@ dist
 .env
 .vscode
 .npmignore
+.history
 config.json
 google-keys.json
 .DS_Store
 *.db
 *.db-journal
+

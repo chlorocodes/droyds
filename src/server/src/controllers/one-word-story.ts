@@ -6,9 +6,22 @@ import {
 } from '../schemas/one-word-story.js'
 import { RouteHandler } from '../types/routes.js'
 
-export const getAllStories: RouteHandler<GetAllStoriesSchema> = async (
-  req
-) => {}
+export const getAllStories: RouteHandler<GetAllStoriesSchema> = async (req) => {
+  const stories = await db.oneWordStory.findMany({
+    include: {
+      words: {
+        include: {
+          author: true
+        }
+      }
+    }
+  })
+
+  return {
+    status: 'success',
+    stories
+  }
+}
 
 export const getAllWords: RouteHandler<GetAllWordsSchema> = async (req) => {}
 

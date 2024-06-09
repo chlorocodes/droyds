@@ -13,8 +13,6 @@ export function BotCard({ icon, color, name }: Props) {
       <Flex direction="column" align="center" gap={1}>
         <Card
           cursor="pointer"
-          borderWidth={1}
-          borderColor={color}
           borderRadius={4}
           padding="4"
           bg="#1a1d1d"

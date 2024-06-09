@@ -22,4 +22,4 @@ app.register(fastifySession, {
 })
 app.register(serveStatic, { root: join(__dirname, '..') })
 app.register(authRoutes, { prefix: '/api/auth' })
-app.register(oneWordStoryRoutes, { prefix: '/api/ows' })
+app.register(oneWordStoryRoutes, { prefix: '/api/stories' })

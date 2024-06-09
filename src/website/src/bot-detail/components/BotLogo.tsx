@@ -11,7 +11,7 @@ export function BotLogo({ name, icon }: Props) {
       <Heading textTransform="uppercase" fontSize="xl">
         {name}
       </Heading>
-      <Avatar borderWidth={2} name={name} src={icon} boxSize={100} />
+      <Avatar borderWidth={2} name={name} src={icon} boxSize={75} p={2} />
     </Flex>
   )
 }

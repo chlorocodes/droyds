@@ -22,6 +22,7 @@ interface Story {
 
 export function GraypePage() {
   const [stories, setStories] = useState<string[]>([])
+  console.log(stories)
 
   useEffect(() => {
     async function getStories() {
@@ -54,7 +55,7 @@ export function GraypePage() {
         flexDirection="column"
         width="15rem"
       >
-        <BotLogo name={graype.name} icon={graype.icon} />
+        <BotLogo name={graype.name} />
       </Flex>
     </Flex>
   )

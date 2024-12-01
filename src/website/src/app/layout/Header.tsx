@@ -1,6 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom'
 import { Flex, Link } from '@chakra-ui/react'
-import logo from '/logo.svg'
 
 export function Header() {
   return (
@@ -13,7 +12,7 @@ export function Header() {
       padding="1rem"
     >
       <Link as={RouterLink} to="/">
-        <img src={logo} />
+        <img />
       </Link>
     </Flex>
   )

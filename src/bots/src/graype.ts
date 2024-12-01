@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
-import { Bot } from '../../common/bot.js'
 import { oneWordStories } from '@droyds/core/services'
+import { Bot } from './common/bot.js'
 
 export class Graype extends Bot {
   isOn = true

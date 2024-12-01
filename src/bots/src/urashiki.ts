@@ -1,4 +1,4 @@
-import { Bot } from '../common/bot.js'
+import { Bot } from './common/bot.js'
 
 export class Urashiki extends Bot {
   constructor() {

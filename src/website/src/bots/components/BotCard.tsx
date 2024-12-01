@@ -1,13 +1,12 @@
-import { Card, Flex, Image, Link, Text } from '@chakra-ui/react'
+import { Card, Flex, Link, Text } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 
 interface Props {
   name: string
-  icon: string
   color: string
 }
 
-export function BotCard({ icon, color, name }: Props) {
+export function BotCard({ color, name }: Props) {
   return (
     <Link as={RouterLink} to={`/bots/${name.toLowerCase()}`}>
       <Flex direction="column" align="center" gap={1}>
@@ -17,9 +16,7 @@ export function BotCard({ icon, color, name }: Props) {
           padding="4"
           bg="#1a1d1d"
           _hover={{ background: color }}
-        >
-          <Image boxSize={75} src={icon} />
-        </Card>
+        />
         <Text fontWeight="bold" fontSize="sm">
           {name}
         </Text>

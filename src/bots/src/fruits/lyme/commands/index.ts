@@ -1,6 +1,0 @@
-export { help } from './help.js'
-export { translate } from './translate.js'
-export { avatar } from './avatar.js'
-export { compliment } from './compliment.js'
-export { fact } from './fact.js'
-export { joke } from './joke.js'

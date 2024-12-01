@@ -7,9 +7,9 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "dev": "tsx watch src/index.ts",
-    "start": "forever start dist/index.js",
-    "stop": "forever stop dist/index.js",
-    "restart": "forever restart dist/index.js",
+    "start": "pm2 start dist/index.js",
+    "stop": "pm2 stop dist/index.js",
+    "restart": "pm2 restart dist/index.js",
     "lint": "eslint .",
     "format": "prettier \"src/**/*\" --write",
     "migrate": "npm run migrate:dev",
@@ -26,7 +26,7 @@
     "@sinclair/typebox": "^0.31.20",
     "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
-    "forever": "^4.0.3"
+    "pm2": "^5.4.3"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.32",

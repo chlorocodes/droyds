@@ -16,10 +16,16 @@ export const theme = extendTheme({
       },
       body: {
         bg: '#0D0E0F',
-        fontFamily: 'Open Sans'
+        fontFamily: 'Geist'
+      },
+      p: {
+        fontWeight: 'light'
       },
       'h1, h2, h3, h4, h5, h6': {
-        fontFamily: 'Varela Round !important'
+        fontFamily: 'Geist'
+      },
+      'pre, code': {
+        fontFamily: 'Geist Mono'
       }
     }
   }

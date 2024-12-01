@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Root .env file (source of truth for all packages)
+ROOT_ENV_FILE="$(realpath "$(dirname "$0")/../.env")"
+
+PACKAGES=("src/core" "src/server" "src/bots" "src/website")
+
+# Create symlinks for `.env` in each individual package
+for pkg in "${PACKAGES[@]}"; do
+  TARGET_DIR="$(realpath "$(dirname "$0")/../$pkg")"
+  TARGET_ENV_FILE="$TARGET_DIR/.env"
+
+  if [ ! -d "$TARGET_DIR" ]; then
+    echo "Directory does not exist: $TARGET_DIR"
+    continue
+  fi
+
+  if [ -e "$TARGET_ENV_FILE" ] || [ -L "$TARGET_ENV_FILE" ]; then
+    rm "$TARGET_ENV_FILE"
+  fi
+
+  ln -s "$ROOT_ENV_FILE" "$TARGET_ENV_FILE"
+  echo "Symlink created: $TARGET_ENV_FILE"
+done

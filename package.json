@@ -9,6 +9,7 @@
     "src/website"
   ],
   "scripts": {
+    "init": "./tasks/init",
     "dev": "concurrently -n \"Website,Server,Prisma Studio\" -c \"blue.bold,green.bold,magenta.bold\" \"npm:dev:website\" \"npm:dev:server\" \"npm:dev:db\"",
     "dev:website": "wait-on tcp:3000 && npm run dev --workspace=@droyds/website",
     "dev:server": "npm run dev --workspace=@droyds/server",
@@ -17,7 +18,8 @@
     "clean": "npm run clean --workspaces",
     "lint": "npm run lint --workspaces",
     "format": "npm run format --workspaces",
-    "migrate": "npm run migrate --workspace=@droyds/core"
+    "migrate": "npm run migrate --workspace=@droyds/core",
+    "generate": "npm run generate --workspace=@droyds/core"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

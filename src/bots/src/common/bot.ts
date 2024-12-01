@@ -12,9 +12,8 @@ interface Options {
     name: string
     isChatEnabled: boolean
     color: number
-    roleId: string
     channelId?: string
-    debugChannelId?: string
+    debugChannelId: string
   }
 }
 
@@ -89,6 +88,7 @@ export class Bot {
       (process.env.NODE_ENV === 'development' &&
         message.guild?.id !== process.env.DEBUG_SERVER_ID)
     ) {
+      console.log(message.guild?.id)
       return
     }
 
@@ -104,9 +104,15 @@ export class Bot {
 
     const isReplyToBot = message.mentions.repliedUser?.id === this.settings.id
     const isBotMention = message.mentions.users.get(this.settings.id)
-    const isRoleMention = message.mentions.roles.get(this.settings.roleId)
     const isDebugChannel = message.channel.id === this.settings.debugChannelId
-    const isTalkingToBot = isReplyToBot || isBotMention || isRoleMention
+
+    console.log({
+      messageChannelId: message.channel.id,
+      debugChannelId: this.settings.debugChannelId,
+      isDebugChannel
+    })
+
+    const isTalkingToBot = isReplyToBot || isBotMention
 
     if (isDebugChannel || (this.settings.isChatEnabled && isTalkingToBot)) {
       return this.onChat(message)

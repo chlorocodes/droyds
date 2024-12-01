@@ -1,7 +1,6 @@
 import { Mynt } from './mynt.js'
 import { Lyme } from './lyme.js'
 import { Lemyn } from './lemyn.js'
-import { Graype } from './graype.js'
 import { Orynge } from './orynge.js'
 import { Shibai } from './shibai.js'
 import { Momoshiki } from './momoshiki.js'
@@ -14,7 +13,6 @@ const bots = [
   new Mynt(),
   new Lyme(),
   new Lemyn(),
-  new Graype(),
   new Orynge(),
   new Shibai(),
   new Isshiki(),

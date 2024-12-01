@@ -11,8 +11,7 @@ export class Mynt extends Bot {
         color: 0x227414,
         isChatEnabled: false,
         id: process.env.MYNT_USER_ID as string,
-        roleId: process.env.MYNT_ROLE_ID as string,
-        debugChannelId: process.env.DEBUG_MYNT_CHANNEL_ID as string
+        debugChannelId: process.env.MYNT_DEBUG_CHANNEL_ID as string
       }
     })
   }

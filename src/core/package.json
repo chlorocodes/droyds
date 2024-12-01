@@ -23,7 +23,8 @@
     "lint": "eslint .",
     "format": "prettier \"src/**/*\" --write",
     "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "studio": "PRISMA_DOTENV_PATH=./.env prisma studio -p 2000"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.2.2",

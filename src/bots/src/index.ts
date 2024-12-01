@@ -1,11 +1,29 @@
-export { Mynt } from './mynt.js'
-export { Lyme } from './lyme.js'
-export { Lemyn } from './lemyn.js'
-export { Graype } from './graype.js'
-export { Orynge } from './orynge.js'
-export { Shibai } from './shibai.js'
-export { Momoshiki } from './momoshiki.js'
-export { Urashiki } from './urashiki.js'
-export { Isshiki } from './isshiki.js'
-export { Kaguya } from './kaguya.js'
-export { Kinshiki } from './kinshiki.js'
+import { Mynt } from './mynt.js'
+import { Lyme } from './lyme.js'
+import { Lemyn } from './lemyn.js'
+import { Graype } from './graype.js'
+import { Orynge } from './orynge.js'
+import { Shibai } from './shibai.js'
+import { Momoshiki } from './momoshiki.js'
+import { Urashiki } from './urashiki.js'
+import { Isshiki } from './isshiki.js'
+import { Kaguya } from './kaguya.js'
+import { Kinshiki } from './kinshiki.js'
+
+const bots = [
+  new Mynt(),
+  new Lyme(),
+  new Lemyn(),
+  new Graype(),
+  new Orynge(),
+  new Shibai(),
+  new Isshiki(),
+  new Momoshiki(),
+  new Kinshiki(),
+  new Urashiki(),
+  new Kaguya()
+]
+
+bots.forEach((bot) => {
+  bot.start()
+})

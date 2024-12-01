@@ -1,11 +1,16 @@
 #!/bin/bash
 
-# Root .env file (source of truth for all packages)
-ROOT_ENV_FILE="$(realpath "$(dirname "$0")/../.env")"
+# The `.env` file at the root will be the source of truth used by all other packages (via symlinks).
+ROOT_ENV_FILE="$(dirname "$0")/../.env"
+
+if [ ! -f "$ROOT_ENV_FILE" ]; then
+  echo "NODE_ENV=development" > "$ROOT_ENV_FILE"
+  echo "DATABASE_URL=file:./droyds.db" >> "$ROOT_ENV_FILE"
+  echo "Created .env file."
+fi
 
 PACKAGES=("src/core" "src/server" "src/bots" "src/website")
 
-# Create symlinks for `.env` in each individual package
 for pkg in "${PACKAGES[@]}"; do
   TARGET_DIR="$(realpath "$(dirname "$0")/../$pkg")"
   TARGET_ENV_FILE="$TARGET_DIR/.env"
@@ -19,6 +24,6 @@ for pkg in "${PACKAGES[@]}"; do
     rm "$TARGET_ENV_FILE"
   fi
 
-  ln -s "$ROOT_ENV_FILE" "$TARGET_ENV_FILE"
+  ln -s "$(realpath "$ROOT_ENV_FILE")" "$TARGET_ENV_FILE"
   echo "Symlink created: $TARGET_ENV_FILE"
 done

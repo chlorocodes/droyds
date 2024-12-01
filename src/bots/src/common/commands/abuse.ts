@@ -1,6 +1,6 @@
 import { GuildMember, Message } from 'discord.js'
 
-export async function abuse(message: Message) {
+export async function abuse(message: Message<true>) {
   try {
     const victim = message.mentions.members?.at(0) as GuildMember
     const oldNickname = victim.nickname ?? victim.user.username

@@ -33,7 +33,7 @@ class JokesService {
     const response = await fetch(
       `https://v2.jokeapi.dev/joke/Miscellaneous,Dark?blacklistFlags=religious,racist&type=twopart&amount=${count}`
     )
-    const jokes: JokeResponse = await response.json()
+    const jokes = (await response.json()) as JokeResponse
     if ('amount' in jokes) {
       return jokes.jokes
     } else {

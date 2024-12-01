@@ -21,7 +21,7 @@ export class Graype extends Bot {
     })
   }
 
-  protected override async onMessage(message: Message) {
+  protected override async onMessage(message: Message<true>) {
     const storyChannelId =
       process.env.NODE_ENV === 'development'
         ? process.env.DEBUG_STORY_CHANNEL_ID
@@ -43,7 +43,7 @@ export class Graype extends Bot {
     }
   }
 
-  protected override async onCommand(message: Message) {
+  protected override onCommand(message: Message<true>) {
     const [commandName] = message.cleanContent.trim().split(' ')
 
     const isAdmin =

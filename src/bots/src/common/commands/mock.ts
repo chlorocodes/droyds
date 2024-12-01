@@ -1,7 +1,7 @@
 import { roaster } from '@droyds/core/services'
 import { Message } from 'discord.js'
 
-export async function mock(message: Message) {
+export async function mock(message: Message<true>) {
   if (!message.reference) {
     return message.reply('You need to reply to a message when you do !mock')
   }

@@ -2,7 +2,7 @@ import { Message } from 'discord.js'
 import { Bot } from '../bot.js'
 
 export async function clearConvo(
-  message: Message,
+  message: Message<true>,
   clearConvo: () => void,
   botInfo: Bot['settings']
 ) {

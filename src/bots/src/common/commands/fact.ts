@@ -1,7 +1,7 @@
 import { apiNinjasService } from '@droyds/core/services'
 import { Message } from 'discord.js'
 
-export async function fact(message: Message) {
+export async function fact(message: Message<true>) {
   try {
     const [fact] = await apiNinjasService.getFacts(1)
     message.reply(fact)

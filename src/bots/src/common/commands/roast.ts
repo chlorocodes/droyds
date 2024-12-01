@@ -3,7 +3,7 @@ import { Message } from 'discord.js'
 
 const greetings = ['Yo', 'Hey', 'Sup']
 
-export async function roast(message: Message) {
+export async function roast(message: Message<true>) {
   const victim = message.mentions?.members?.at(0) ?? message.author
 
   const greeting = greetings[Math.floor(Math.random() * greetings.length)]

@@ -26,7 +26,7 @@ export class Bot {
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.MessageContent
   ]
-  protected client = new Client({
+  protected client: Client<true> = new Client({
     intents: this.intents
   })
   private token: string
@@ -80,6 +80,10 @@ export class Bot {
   }
 
   protected onMessage(message: Message) {
+    if (!message.inGuild) {
+      return
+    }
+
     if (
       message.author.bot ||
       (process.env.NODE_ENV === 'development' &&
@@ -132,7 +136,9 @@ export class Bot {
       return
     }
 
-    await message.channel.sendTyping()
+    if (message.inGuild()) {
+      message.channel.sendTyping()
+    }
 
     const user = message.author.username
     const question = message.cleanContent
@@ -164,7 +170,8 @@ export class Bot {
 
     if (
       validCommands.has(commandName) &&
-      args.join(' ').includes(this.settings.name)
+      args.join(' ').includes(this.settings.name) &&
+      message.inGuild()
     ) {
       message.channel.sendTyping()
     }
@@ -173,7 +180,11 @@ export class Bot {
       commandName.startsWith('!convo') &&
       args[0].toLowerCase().includes(this.settings.name.toLowerCase())
     ) {
-      return convo(message, this.getConversation(), this.settings)
+      return convo(
+        message as Message<true>,
+        this.getConversation(),
+        this.settings
+      )
     }
 
     if (
@@ -181,7 +192,7 @@ export class Bot {
       args[0].toLowerCase().includes(this.settings.name.toLowerCase())
     ) {
       return clearConvo(
-        message,
+        message as Message<true>,
         this.clearConversation.bind(this),
         this.settings
       )

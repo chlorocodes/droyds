@@ -16,7 +16,7 @@ class RoastService {
     const response = await fetch(
       'https://evilinsult.com/generate_insult.php?lang=en&type=json'
     )
-    const { insult }: InsultResponse = await response.json()
+    const { insult } = (await response.json()) as InsultResponse
     return insult
   }
 

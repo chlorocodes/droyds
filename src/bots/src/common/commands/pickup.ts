@@ -3,7 +3,7 @@ import { APIEmbed, Message } from 'discord.js'
 
 const greetings = ['Yo', 'Hey', 'Sup', 'Hi']
 
-export async function pickup(message: Message) {
+export async function pickup(message: Message<true>) {
   if (message.content.startsWith('!pickup~')) {
     return multiPickup(message)
   }
@@ -23,7 +23,7 @@ export async function pickup(message: Message) {
   message.channel.send(formattedPickupLine)
 }
 
-async function multiPickup(message: Message) {
+async function multiPickup(message: Message<true>) {
   const suffix = message.content.split('~')[1]
   const count = Number(suffix.split(' ')[0])
   const victim =

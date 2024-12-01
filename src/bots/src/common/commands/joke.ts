@@ -1,7 +1,7 @@
 import { Message } from 'discord.js'
 import { jokes } from '@droyds/core/services'
 
-export async function joke(message: Message) {
+export async function joke(message: Message<true>) {
   const [joke] = await jokes.getJokes(1)
   const jokeMessage = joke.setup + '\n\n' + joke.delivery
   return message.reply(jokeMessage)

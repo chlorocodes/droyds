@@ -1,6 +1,6 @@
 import { Message, APIEmbed } from 'discord.js'
 
-export async function help(message: Message) {
+export async function help(message: Message<true>) {
   const embed: APIEmbed = {
     title: 'Lyme commands',
     description: 'Here is the list of all commands you can use with Lyme.',

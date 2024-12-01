@@ -3,7 +3,7 @@ import type { ChatCompletionRequestMessage } from 'openai'
 import { Bot } from '../bot.js'
 
 export async function convo(
-  message: Message,
+  message: Message<true>,
   conversation: ChatCompletionRequestMessage[],
   botInfo: Bot['settings']
 ) {

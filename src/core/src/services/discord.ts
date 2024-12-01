@@ -6,6 +6,23 @@ interface AuthToken {
   scope: string
 }
 
+interface User {
+  id: string
+  username: string
+  discriminator: string
+  avatar: string | null
+  bot?: boolean
+  mfa_enabled: boolean
+  banner: string | null
+  accent_color: number | null
+  locale: string
+  verified?: boolean
+  email?: string | null
+  flags: number
+  premium_type?: 0 | 1 | 2
+  public_flags: number
+}
+
 export class DiscordService {
   private baseUrl = 'https://discord.com/api'
   private clientId = process.env.DISCORD_CLIENT_ID as string
@@ -36,13 +53,13 @@ export class DiscordService {
       })
     })
 
-    const token: AuthToken = await response.json()
+    const token = (await response.json()) as AuthToken
 
     const userResponse = await fetch(`${this.baseUrl}/users/@me`, {
       headers: { Authorization: `${token.token_type} ${token.access_token}` }
     })
 
-    const user = await userResponse.json()
+    const user = (await userResponse.json()) as User
 
     return user
   }

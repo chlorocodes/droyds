@@ -8,7 +8,7 @@ import {
 
 type TranslatedMessage = Pick<Message, 'author' | 'content'>
 
-export async function translate(message: Message, args: string[] = []) {
+export async function translate(message: Message<true>, args: string[] = []) {
   if (message.content.startsWith('!translate~')) {
     return multiTranslate(message)
   }
@@ -29,7 +29,7 @@ export async function translate(message: Message, args: string[] = []) {
   message.reply(`Translation: ${translation}`)
 }
 
-async function multiTranslate(message: Message) {
+async function multiTranslate(message: Message<true>) {
   const count = Number(message.content.split('~')[1])
   if (!count || Number.isNaN(count)) {
     return message.reply('Invalid usage')

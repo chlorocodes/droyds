@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.32",
-    "@types/node": "^20.6.2",
+    "@types/node": "^20.17.9",
     "eslint": "^8.43.0",
     "nodemon": "^3.0.1",
     "prettier": "^2.8.8",

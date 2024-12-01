@@ -3,7 +3,7 @@ import { APIEmbed, Message } from 'discord.js'
 
 const greetings = ['Yo', 'Hey', 'Sup', 'Hi']
 
-export async function compliment(message: Message) {
+export async function compliment(message: Message<true>) {
   if (message.content.startsWith('!compliment~')) {
     return multiCompliment(message)
   }
@@ -23,7 +23,7 @@ export async function compliment(message: Message) {
   message.channel.send(formattedCompliment)
 }
 
-async function multiCompliment(message: Message) {
+async function multiCompliment(message: Message<true>) {
   const suffix = message.content.split('~')[1]
   const count = Number(suffix.split(' ')[0])
   const complimentee =

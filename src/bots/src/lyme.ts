@@ -30,7 +30,7 @@ export class Lyme extends Bot {
     this.setupIntervals()
   }
 
-  onCommand(message: Message) {
+  onCommand(message: Message<true>) {
     super.onCommand(message)
 
     const [commandName, ...args] = message.cleanContent.trim().split(' ')

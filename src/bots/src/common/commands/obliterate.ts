@@ -1,6 +1,6 @@
 import { Message, TextChannel } from 'discord.js'
 
-export async function obliterate(message: Message) {
+export async function obliterate(message: Message<true>) {
   try {
     const channel = message.channel as TextChannel
     await channel.bulkDelete(100, true)

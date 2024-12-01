@@ -20,7 +20,7 @@ class OneWordStoryService {
     this.initialize()
   }
 
-  async onWord(message: Message) {
+  async onWord(message: Message<true>) {
     const isValid = await this.validate(message)
 
     if (!isValid) {
@@ -37,7 +37,7 @@ class OneWordStoryService {
     }
   }
 
-  async reset(message: Message) {
+  async reset(message: Message<true>) {
     await db.$transaction([
       db.word.deleteMany({
         where: { storyId: this.storyId }
@@ -55,7 +55,7 @@ class OneWordStoryService {
     message.reply('Story has been reset')
   }
 
-  async end(message: Message, storyName: string = 'Graype Story') {
+  async end(message: Message<true>, storyName: string = 'Graype Story') {
     const nextStoryId = await this.createNextStory()
     await db.$transaction([
       db.oneWordStory.update({
@@ -80,7 +80,7 @@ class OneWordStoryService {
     )
   }
 
-  async displayStory(message: Message, title = 'Current Story:') {
+  async displayStory(message: Message<true>, title = 'Current Story:') {
     const story = await db.oneWordStory.findUnique({
       where: {
         id: this.storyId
@@ -127,7 +127,7 @@ class OneWordStoryService {
     }
   }
 
-  private async addWord(word: string, message: Message) {
+  private async addWord(word: string, message: Message<true>) {
     const wordToAdd = sentenceTerminators.includes(word) ? word : ` ${word}`
     const { id: userId, username } = message.author
 
@@ -179,7 +179,7 @@ class OneWordStoryService {
       where: { id: this.storyId }
     })
   }
-  private async validate(message: Message) {
+  private async validate(message: Message<true>) {
     const isValidWord = await this.validateWord(message)
     if (!isValidWord) {
       return false
@@ -193,12 +193,11 @@ class OneWordStoryService {
     return true
   }
 
-  private async validateWord(message: Message) {
+  private async validateWord(message: Message<true>) {
     const input = message.cleanContent.trim()
     const words = input.split(' ')
 
     if (words.length > 2) {
-      console.log('waaaaaaaaaaaaaaaaaat')
       this.sendErrorMessage(message, 'Please send 1 word at a time')
       return false
     }
@@ -220,7 +219,7 @@ class OneWordStoryService {
     return true
   }
 
-  private validateAuthor(message: Message) {
+  private validateAuthor(message: Message<true>) {
     if (message.author.id === this.lastAuthor) {
       this.sendErrorMessage(
         message,
@@ -232,7 +231,7 @@ class OneWordStoryService {
     return true
   }
 
-  private async sendErrorMessage(message: Message, error: string) {
+  private async sendErrorMessage(message: Message<true>, error: string) {
     await message.delete()
     const reply = await message.channel.send(error)
     await delay()

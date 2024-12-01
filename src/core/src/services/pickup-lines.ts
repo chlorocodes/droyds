@@ -16,7 +16,7 @@ class PickupService {
   private async getLine() {
     const url = `https://vinuxd.vercel.app/api/pickup`
     const response = await fetch(url)
-    const { pickup }: PickupLineResponse = await response.json()
+    const { pickup } = (await response.json()) as PickupLineResponse
     return pickup
   }
 }

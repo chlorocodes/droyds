@@ -17,7 +17,7 @@ export class Mynt extends Bot {
     })
   }
 
-  onCommand(message: Message) {
+  onCommand(message: Message<true>) {
     super.onCommand(message)
 
     const [commandName] = message.cleanContent.trim().split(' ')

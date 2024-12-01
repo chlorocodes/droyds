@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 
-export async function snitch(message: Message) {
+export async function snitch(message: Message<true>) {
   const authorityId = process.env.AUTHORITY_ID as string
 
   if (!message.reference) {

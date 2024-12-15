@@ -1,6 +1,6 @@
 import { apiNinjasService } from '@droyds/core/services'
 import { Message, TextChannel } from 'discord.js'
-import { Bot } from './common/bot.js'
+import { Bot } from './common/bot'
 import {
   avatar,
   compliment,
@@ -10,7 +10,7 @@ import {
   translate,
   image,
   imageCommands
-} from './common/commands/index.js'
+} from './common/commands/index'
 
 export class Lyme extends Bot {
   constructor() {

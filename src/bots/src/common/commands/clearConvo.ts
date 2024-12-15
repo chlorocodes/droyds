@@ -1,5 +1,5 @@
 import { Message } from 'discord.js'
-import { Bot } from '../bot.js'
+import { Bot } from '../bot'
 
 export async function clearConvo(
   message: Message<true>,

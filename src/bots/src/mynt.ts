@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
-import { Bot } from './common/bot.js'
-import { obliterate } from './common/commands/obliterate.js'
+import { Bot } from './common/bot'
+import { obliterate } from './common/commands/obliterate'
 
 export class Mynt extends Bot {
   constructor() {

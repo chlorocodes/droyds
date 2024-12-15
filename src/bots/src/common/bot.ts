@@ -14,6 +14,8 @@ interface Options {
     color: number
     channelId?: string
     debugChannelId: string
+    adminPrefix?: string
+    prefix?: string
   }
 }
 
@@ -30,10 +32,14 @@ export class Bot {
   })
   private token: string
   private chat: ChatService
-  private isRestricted = true
+  private isOn: boolean = true
 
   constructor({ settings, token, prompt = '' }: Options) {
-    this.settings = settings
+    this.settings = {
+      prefix: '!',
+      adminPrefix: '~',
+      ...settings
+    }
     this.token = token
     this.chat = new ChatService({ prompt })
   }
@@ -88,7 +94,6 @@ export class Bot {
       (process.env.NODE_ENV === 'development' &&
         message.guild?.id !== process.env.DEBUG_SERVER_ID)
     ) {
-      console.log(message.guild?.id)
       return
     }
 
@@ -105,13 +110,6 @@ export class Bot {
     const isReplyToBot = message.mentions.repliedUser?.id === this.settings.id
     const isBotMention = message.mentions.users.get(this.settings.id)
     const isDebugChannel = message.channel.id === this.settings.debugChannelId
-
-    console.log({
-      messageChannelId: message.channel.id,
-      debugChannelId: this.settings.debugChannelId,
-      isDebugChannel
-    })
-
     const isTalkingToBot = isReplyToBot || isBotMention
 
     if (isDebugChannel || (this.settings.isChatEnabled && isTalkingToBot)) {
@@ -120,25 +118,7 @@ export class Bot {
   }
 
   protected async onChat(message: Message) {
-    const shibuyaServerId = process.env.SHIBUYA_SERVER_ID as string
-    const shibuyaChannelId = process.env.LEMYN_LYME_CHANNEL_ID as string
-
-    if (
-      this.isRestricted &&
-      message.guild?.id === shibuyaServerId &&
-      message.channel.id !== shibuyaChannelId
-    ) {
-      return
-    }
-
-    const cultServerId = process.env.CULT_SERVER_ID as string
-    const cultOtsutsukiChannelId = process.env
-      .CULT_OTSUTSUKI_CHANNEL_ID as string
-
-    if (
-      message.guild?.id === cultServerId &&
-      message.channel.id !== cultOtsutsukiChannelId
-    ) {
+    if (!this.isOn) {
       return
     }
 
@@ -159,13 +139,13 @@ export class Bot {
   protected onAdminCommand(message: Message) {
     const [commandName] = message.cleanContent.trim().split(' ')
 
-    if (commandName === '~restrict') {
-      this.isRestricted = true
+    if (commandName === '~off') {
+      this.isOn = true
       return message.reply('Droyd restrictions have been enabled.')
     }
 
-    if (commandName === '~free' || commandName === '~unrestrict') {
-      this.isRestricted = false
+    if (commandName === '~on' || commandName === '~unrestrict') {
+      this.isOn = false
       return message.reply('Droyd restrictions have been disabled.')
     }
   }
@@ -203,5 +183,21 @@ export class Bot {
         this.settings
       )
     }
+  }
+
+  private isCommand(cmd: string) {
+    if (cmd === this.settings.prefix) {
+      return true
+    }
+
+    return cmd === `${this.settings.adminPrefix}${cmd}`
+  }
+
+  private isAdminCommand(cmd: string) {
+    if (cmd === this.settings.adminPrefix) {
+      return true
+    }
+
+    return cmd === `${this.settings.adminPrefix}${cmd}`
   }
 }

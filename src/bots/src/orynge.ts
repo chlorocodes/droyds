@@ -1,4 +1,4 @@
-import { Bot } from './common/bot.js'
+import { Bot } from './common/bot'
 
 export class Orynge extends Bot {
   constructor() {

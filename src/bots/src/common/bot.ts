@@ -19,6 +19,11 @@ interface Options {
   }
 }
 
+enum Command {
+  On = 'on',
+  Off = 'off'
+}
+
 export class Bot {
   settings: Options['settings']
   private intents = [
@@ -139,12 +144,12 @@ export class Bot {
   protected onAdminCommand(message: Message) {
     const [commandName] = message.cleanContent.trim().split(' ')
 
-    if (commandName === '~off') {
+    if (this.isAdminCmd(commandName, Command.Off)) {
       this.isOn = true
       return message.reply('Droyd restrictions have been enabled.')
     }
 
-    if (commandName === '~on' || commandName === '~unrestrict') {
+    if (this.isAdminCmd(commandName, Command.On)) {
       this.isOn = false
       return message.reply('Droyd restrictions have been disabled.')
     }
@@ -193,11 +198,17 @@ export class Bot {
     return cmd === `${this.settings.adminPrefix}${cmd}`
   }
 
-  private isAdminCommand(cmd: string) {
-    if (cmd === this.settings.adminPrefix) {
+  private isCmd(commandName: string, cmd: string, isAdmin = false) {
+    const prefix = isAdmin ? this.settings.adminPrefix : this.settings.prefix
+
+    if (cmd === prefix) {
       return true
     }
 
-    return cmd === `${this.settings.adminPrefix}${cmd}`
+    return cmd === `${prefix}${cmd}`
+  }
+
+  private isAdminCmd(commandName: string, cmd: string) {
+    return this.isCmd(commandName, cmd, true)
   }
 }

@@ -21,7 +21,8 @@
     "lint": "npm run lint --workspaces",
     "format": "npm run format --workspaces",
     "migrate": "npm run migrate --workspace=@droyds/core",
-    "generate": "npm run generate --workspace=@droyds/core"
+    "generate": "npm run generate --workspace=@droyds/core",
+    "reset": "npm run reset --workspace=@droyds/core"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

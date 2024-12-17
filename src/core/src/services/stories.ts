@@ -1,4 +1,4 @@
-import { OneWordStory, Word } from '@prisma/client'
+import { ServerState } from '@prisma/client'
 import { Message } from 'discord.js'
 import { db } from './database.js'
 import { delay } from '../utils/delay.js'
@@ -6,64 +6,56 @@ import { delay } from '../utils/delay.js'
 const articles = ['!', '?', ':', ';', '-', '–', '.', ',']
 const sentenceTerminators = ['.', '?', '!']
 
-interface Story extends OneWordStory {
-  words: Word[]
-}
-
 class OneWordStoryService {
-  stateId = ''
-  storyId = ''
-  lastAuthor = ''
-  lastWord = ''
-
-  constructor() {
-    this.initialize()
-  }
-
   async onWord(message: Message<true>) {
-    const isValid = await this.validate(message)
+    const serverId = message.guildId
+    const serverState = await this.initializeServerState(serverId)
 
-    if (!isValid) {
-      return
-    }
+    const isValid = await this.validateWordAndAuthor(message, serverState)
+    if (!isValid) return
 
     const word = message.content
-    await this.addWord(word, message)
+    await this.addWordToStory(word, message, serverState)
+
     message.react('✅')
 
     const lastCharacter = word.slice(-1)
     if (sentenceTerminators.includes(lastCharacter)) {
-      this.displayStory(message)
+      this.displayStory(message, serverState)
     }
   }
 
   async reset(message: Message<true>) {
+    const serverId = message.guildId
+    const serverState = await this.initializeServerState(serverId)
+
     await db.$transaction([
       db.word.deleteMany({
-        where: { storyId: this.storyId }
+        where: { storyId: serverState.currentStoryId }
       }),
-      db.writingState.update({
-        where: { id: this.stateId },
+      db.serverState.update({
+        where: { id: serverState.id },
         data: {
           lastAuthorId: '',
           lastWord: ''
         }
       })
     ])
-    this.lastAuthor = ''
-    this.lastWord = ''
-    message.reply('Story has been reset')
+    message.reply('Story has been reset.')
   }
 
-  async end(message: Message<true>, storyName: string = 'Graype Story') {
-    const nextStoryId = await this.createNextStory()
+  async end(message: Message<true>, storyName: string = 'Unnamed Story') {
+    const serverId = message.guildId
+    const serverState = await this.initializeServerState(serverId)
+
+    const nextStoryId = await this.createNewStory()
     await db.$transaction([
       db.oneWordStory.update({
-        where: { id: this.storyId },
+        where: { id: serverState.currentStoryId },
         data: { isComplete: true, name: storyName }
       }),
-      db.writingState.update({
-        where: { id: this.stateId },
+      db.serverState.update({
+        where: { id: serverState.id },
         data: {
           currentStoryId: nextStoryId,
           lastAuthorId: '',
@@ -71,63 +63,45 @@ class OneWordStoryService {
         }
       })
     ])
-    this.storyId = nextStoryId
-    this.lastAuthor = ''
-    this.lastWord = ''
     await this.displayStory(
       message,
-      'New story started! The previous one has been saved.'
+      serverState,
+      'Story ended! A new story has started.'
     )
   }
 
-  async displayStory(message: Message<true>, title = 'Current Story:') {
-    const story = await db.oneWordStory.findUnique({
-      where: {
-        id: this.storyId
-      },
-      include: {
-        words: { orderBy: { createdAt: 'asc' } }
-      }
+  private async initializeServerState(serverId: string) {
+    let state = await db.serverState.findUnique({
+      where: { serverId }
     })
 
-    if (!story) {
-      return
-    }
-
-    const words = story.words.map(({ word }) => word)
-
-    const embed = {
-      title,
-      description: words.join(' '),
-      color: 0x9266cc
-    }
-
-    message.channel.send({ embeds: [embed] })
-  }
-
-  private async initialize() {
-    const state = await db.writingState.findFirst()
-
-    if (state?.currentStoryId) {
-      const story = await this.getStory(state.currentStoryId)
-      this.storyId = story.id
-      this.stateId = state.id
-      this.lastAuthor = state.lastAuthorId
-      this.lastWord = state.lastWord
-    } else {
-      await db.writingState.deleteMany()
-      const storyId = await this.createNextStory()
-      const { id: stateId } = await db.writingState.create({
+    if (!state) {
+      const storyId = await this.createNewStory()
+      state = await db.serverState.create({
         data: {
-          currentStoryId: storyId
+          serverId,
+          currentStoryId: storyId,
+          lastAuthorId: '',
+          lastWord: ''
         }
       })
-      this.stateId = stateId
-      this.storyId = storyId
     }
+
+    return state
   }
 
-  private async addWord(word: string, message: Message<true>) {
+  private async createNewStory(): Promise<string> {
+    const story = await db.oneWordStory.create({
+      data: {}
+    })
+    return story.id
+  }
+
+  private async addWordToStory(
+    word: string,
+    message: Message<true>,
+    serverState: ServerState
+  ) {
     const wordToAdd = sentenceTerminators.includes(word) ? word : ` ${word}`
     const { id: userId, username } = message.author
 
@@ -144,91 +118,73 @@ class OneWordStoryService {
       db.word.create({
         data: {
           word: wordToAdd,
-          storyId: this.storyId,
+          storyId: serverState.currentStoryId,
           authorId: userId,
           discordMessageId: message.id
         }
       }),
-      db.writingState.update({
-        where: { id: this.stateId },
+      db.serverState.update({
+        where: { id: serverState.id },
         data: { lastAuthorId: userId, lastWord: wordToAdd }
       })
     ])
-
-    this.lastAuthor = userId
-    this.lastWord = wordToAdd
   }
 
-  private async getStory(id: string): Promise<Story> {
-    const story = await db.oneWordStory.findUnique({
-      where: { id },
-      include: { words: true }
-    })
-    return story as Story
-  }
-
-  private async createNextStory(): Promise<string> {
-    const { id: storyId } = await db.oneWordStory.create({
-      data: {}
-    })
-    return storyId
-  }
-
-  private async deleteCurrentStory() {
-    await db.oneWordStory.delete({
-      where: { id: this.storyId }
-    })
-  }
-  private async validate(message: Message<true>) {
-    const isValidWord = await this.validateWord(message)
-    if (!isValidWord) {
-      return false
-    }
-
-    const isValidAuthor = await this.validateAuthor(message)
-    if (!isValidAuthor) {
-      return false
-    }
-
-    return true
-  }
-
-  private async validateWord(message: Message<true>) {
+  private async validateWordAndAuthor(
+    message: Message<true>,
+    serverState: ServerState
+  ) {
     const input = message.cleanContent.trim()
     const words = input.split(' ')
 
     if (words.length > 2) {
-      this.sendErrorMessage(message, 'Please send 1 word at a time')
+      this.sendErrorMessage(message, 'Please send only 1 word at a time.')
       return false
     }
 
     if (words.length === 2) {
       const [first, second] = words
-      console.log({ first, second })
       if (!articles.includes(first) && !articles.includes(second)) {
-        this.sendErrorMessage(message, 'Please send 1 word at a time')
+        this.sendErrorMessage(message, 'Please send only 1 word at a time.')
         return false
       }
     }
 
-    if (input === this.lastWord) {
-      this.sendErrorMessage(message, "You can't repeat the same word")
+    if (input === serverState.lastWord) {
+      this.sendErrorMessage(message, "You can't repeat the same word.")
+      return false
+    }
+
+    if (message.author.id === serverState.lastAuthorId) {
+      this.sendErrorMessage(message, 'You cannot send two words in a row.')
       return false
     }
 
     return true
   }
 
-  private validateAuthor(message: Message<true>) {
-    if (message.author.id === this.lastAuthor) {
-      this.sendErrorMessage(
-        message,
-        'The same person cannot send a word twice in a row'
-      )
-      return false
+  private async displayStory(
+    message: Message<true>,
+    serverState: ServerState,
+    title = 'Current Story'
+  ) {
+    const story = await db.oneWordStory.findUnique({
+      where: { id: serverState.currentStoryId },
+      include: {
+        words: { orderBy: { createdAt: 'asc' } }
+      }
+    })
+
+    if (!story) return
+
+    const words = story.words.map(({ word }) => word).join('')
+    const embed = {
+      title,
+      description: words,
+      color: 0x9266cc
     }
 
-    return true
+    message.channel.send({ embeds: [embed] })
   }
 
   private async sendErrorMessage(message: Message<true>, error: string) {

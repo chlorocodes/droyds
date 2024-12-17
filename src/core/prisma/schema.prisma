@@ -7,15 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Bots 
-
 model Droyd {
   id    String @id @default(uuid()) @map("id")
   name  String @map("name")
   color String @map("color")
 }
-
-// Auth
 
 model Session {
   id       String  @id @map("id")
@@ -25,15 +21,17 @@ model Session {
   @@map("sessions")
 }
 
-// Writing Server
-
-model WritingState {
+model ServerState {
   id             String @id @default(uuid()) @map("id")
-  currentStoryId String @default("") @map("current_story_id")
-  lastAuthorId   String @default("") @map("last_author_id")
-  lastWord       String @default("") @map("last_word")
+  serverId       String @unique @map("server_id")
+  currentStoryId String @map("current_story_id")
+  lastAuthorId   String @map("last_author_id")
+  lastWord       String @map("last_word")
 
-  @@map("state")
+  currentStory OneWordStory @relation(fields: [currentStoryId], references: [id], onDelete: Restrict)
+  lastAuthor   Author       @relation(fields: [lastAuthorId], references: [id], onDelete: Restrict)
+
+  @@map("server_states")
 }
 
 model OneWordStory {
@@ -42,18 +40,20 @@ model OneWordStory {
   isComplete Boolean  @default(false) @map("is_complete")
   createdAt  DateTime @default(now()) @map("created_at")
 
-  words Word[]
+  words       Word[]
+  serverState ServerState[]
 
   @@map("stories")
 }
 
 model Author {
-  id        String   @id @default("1152770278582124685") @map("id")
-  username  String   @default("Graype") @map("username")
+  id        String   @id @default("1311745612902957107") @map("id")
+  username  String   @default("Vybe") @map("username")
   avatar    String   @map("avatar")
   createdAt DateTime @default(now()) @map("created_at")
 
-  words Word[]
+  words       Word[]
+  serverState ServerState[]
 
   @@map("authors")
 }
@@ -66,8 +66,9 @@ model Word {
   discordMessageId String   @map("discord_message_id")
   createdAt        DateTime @default(now()) @map("created_at")
 
-  author Author       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   story  OneWordStory @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  author Author       @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
+  @@index([storyId]) // Optimize querying words by story
   @@map("words")
 }

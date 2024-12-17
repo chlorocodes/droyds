@@ -25,7 +25,8 @@
     "lint": "eslint .",
     "format": "prettier \"src/**/*\" --write",
     "generate": "prisma generate",
-    "migrate": "prisma migrate dev"
+    "migrate": "prisma migrate dev",
+    "reset": "prisma db push --force-reset"
   },
   "dependencies": {
     "@google-cloud/translate": "^7.2.2",

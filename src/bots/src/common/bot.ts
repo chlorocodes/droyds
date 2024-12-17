@@ -3,23 +3,26 @@ import { splitMessage } from '@droyds/core/utils'
 import { Client, GatewayIntentBits, Message } from 'discord.js'
 import { convo } from './commands/convo.js'
 import { clearConvo } from './commands/clearConvo.js'
+import { getDefaultHighWaterMark } from 'stream'
+
+interface Settings {
+  id: string
+  name: string
+  isChatEnabled: boolean
+  color: number
+  channelId?: string
+  debugChannelId: string
+  adminPrefix: string
+  prefix: string
+}
 
 interface Options {
   token: string
+  settings: Omit<Settings, 'prefix' | 'adminPrefix'>
   prompt?: string
-  settings: {
-    id: string
-    name: string
-    isChatEnabled: boolean
-    color: number
-    channelId?: string
-    debugChannelId: string
-    adminPrefix?: string
-    prefix?: string
-  }
 }
 
-enum Command {
+export enum Command {
   On = 'on',
   Off = 'off'
 }
@@ -40,11 +43,16 @@ export class Bot {
   private isOn: boolean = true
 
   constructor({ settings, token, prompt = '' }: Options) {
-    this.settings = {
+    const defaultSettings: Partial<Settings> = {
       prefix: '!',
-      adminPrefix: '~',
+      adminPrefix: '~'
+    }
+
+    this.settings = {
+      ...defaultSettings,
       ...settings
     }
+
     this.token = token
     this.chat = new ChatService({ prompt })
   }
@@ -103,13 +111,11 @@ export class Bot {
     }
 
     if (message.content.startsWith('!')) {
-      this.onCommand(message)
-      return
+      return this.onCommand(message)
     }
 
-    if (message.content.startsWith('~')) {
-      this.onAdminCommand(message)
-      return
+    if (message.content.startsWith(this.settings.adminPrefix)) {
+      return this.onAdminCommand(message)
     }
 
     const isReplyToBot = message.mentions.repliedUser?.id === this.settings.id
@@ -137,19 +143,19 @@ export class Bot {
     const messages = splitMessage(response ?? '')
 
     messages.forEach((msg) => {
-      message.reply(msg ?? 'Unabled to generate a response')
+      message.reply(msg ?? 'Unable to generate a response')
     })
   }
 
   protected onAdminCommand(message: Message) {
     const [commandName] = message.cleanContent.trim().split(' ')
 
-    if (this.isAdminCmd(commandName, Command.Off)) {
+    if (this.isAdminCmd(commandName, Command.On)) {
       this.isOn = true
       return message.reply('Droyd restrictions have been enabled.')
     }
 
-    if (this.isAdminCmd(commandName, Command.On)) {
+    if (this.isAdminCmd(commandName, Command.Off)) {
       this.isOn = false
       return message.reply('Droyd restrictions have been disabled.')
     }
@@ -190,25 +196,13 @@ export class Bot {
     }
   }
 
-  private isCommand(cmd: string) {
-    if (cmd === this.settings.prefix) {
-      return true
-    }
-
-    return cmd === `${this.settings.adminPrefix}${cmd}`
+  protected isCmd(message: string = '', command: Command) {
+    const prefix = this.settings.prefix ?? '!'
+    return message.startsWith(prefix + command)
   }
 
-  private isCmd(commandName: string, cmd: string, isAdmin = false) {
-    const prefix = isAdmin ? this.settings.adminPrefix : this.settings.prefix
-
-    if (cmd === prefix) {
-      return true
-    }
-
-    return cmd === `${prefix}${cmd}`
-  }
-
-  private isAdminCmd(commandName: string, cmd: string) {
-    return this.isCmd(commandName, cmd, true)
+  protected isAdminCmd(message: string = '', command: Command) {
+    const prefix = this.settings.adminPrefix ?? '~'
+    return message.startsWith(prefix + command)
   }
 }
